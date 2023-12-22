@@ -27,6 +27,7 @@ public class Bootstrapper : PrismBootstrapper
         containerRegistry.RegisterSingleton<IConfigFiles, ConfigFiles>();
         containerRegistry.RegisterSingleton<IRegistryHelper, RegistryHelper>();
         containerRegistry.RegisterSingleton<IAccountConfigService, AccountConfigService>();
+        containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
         
         RegisterLogging.Register(containerRegistry);
     }

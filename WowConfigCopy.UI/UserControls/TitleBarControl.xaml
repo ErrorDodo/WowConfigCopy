@@ -1,0 +1,34 @@
+<UserControl x:Class="WowConfigCopy.UI.UserControls.TitleBarControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:WowConfigCopy.UI.UserControls">
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Background="{StaticResource PrimaryButtonBrush}" MouseLeftButtonDown="Border_MouseLeftButtonDown"
+                Height="30" VerticalAlignment="Top">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Navigation and Title -->
+                <StackPanel Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding ApplicationName}" Foreground="{StaticResource TextBrush}" Margin="5" VerticalAlignment="Center" />
+                    <TextBlock Text=" - " Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding CurrentViewName}" Foreground="{StaticResource TextBrush}" Margin="5" VerticalAlignment="Center" />
+                    <Button Content="◀" Style="{StaticResource MacNavigationButtonStyle}" Command="{Binding GoBackwardCommand}" />
+                    <Button Content="▶" Style="{StaticResource MacNavigationButtonStyle}" Command="{Binding GoForwardCommand}" />
+
+                </StackPanel>
+
+                <!-- Window Control Buttons -->
+                <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource MacMinimizeButtonStyle}" Command="{Binding MinimizeCommand}" />
+                    <Button Style="{StaticResource MacMaximizeButtonStyle}" Command="{Binding MaximizeCommand}" />
+                    <Button Style="{StaticResource MacCloseButtonStyle}" Command="{Binding ExitCommand}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </DockPanel>
+</UserControl>
