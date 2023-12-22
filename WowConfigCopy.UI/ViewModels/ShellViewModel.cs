@@ -1,5 +1,4 @@
 using System.Windows;
-using System.Windows.Input;
 using Prism.Commands;
 using Prism.Mvvm;
 using Microsoft.Extensions.Logging;
@@ -11,6 +10,7 @@ namespace WowConfigCopy.UI.ViewModels
     {
         private readonly ILogger<ShellViewModel> _logger;
         private readonly INavigationService _navigationService;
+        private readonly IViewModelFactory _viewModelFactory;
 
         private BindableBase _currentViewModel;
         private string _applicationName = "WoW Config Helper";
@@ -34,32 +34,42 @@ namespace WowConfigCopy.UI.ViewModels
             set => SetProperty(ref _currentViewName, value);
         }
 
-        public ICommand ExitCommand { get; }
-        public ICommand SaveCommand { get; }
-        public ICommand GoForwardCommand { get; }
-        public ICommand GoBackwardCommand { get; }
-        public DelegateCommand MinimizeCommand { get; }
-        public DelegateCommand MaximizeCommand { get; }
+        public DelegateCommand ExitCommand { get; private set; }
+        public DelegateCommand SaveCommand { get; private set; }
+        public DelegateCommand GoForwardCommand { get; private set; }
+        public DelegateCommand GoBackwardCommand { get; private set; }
+        public DelegateCommand MinimizeCommand { get; private set; }
+        public DelegateCommand MaximizeCommand { get; private set; }
+        public DelegateCommand<string> NavigateCommand { get; private set; }
 
-        public ShellViewModel(ILogger<ShellViewModel> logger, INavigationService navigationService)
+        public ShellViewModel(ILogger<ShellViewModel> logger, INavigationService navigationService, IViewModelFactory viewModelFactory)
         {
             _logger = logger;
             _navigationService = navigationService;
+            _viewModelFactory = viewModelFactory;
 
             ExitCommand = new DelegateCommand(ExitApplication);
             SaveCommand = new DelegateCommand(SaveSettings);
             MinimizeCommand = new DelegateCommand(MinimizeWindow);
             MaximizeCommand = new DelegateCommand(MaximizeWindow);
+            NavigateCommand = new DelegateCommand<string>(Navigate);
 
             GoForwardCommand = new DelegateCommand(
-                () => _navigationService.GoForward(),
-                () => _navigationService.CanGoForward)
+                    _navigationService.GoForward, 
+                    () => _navigationService.CanGoForward)
                 .ObservesProperty(() => _navigationService.CanGoForward);
 
             GoBackwardCommand = new DelegateCommand(
-                () => _navigationService.GoBack(),
-                () => _navigationService.CanGoBack)
+                    _navigationService.GoBack, 
+                    () => _navigationService.CanGoBack)
                 .ObservesProperty(() => _navigationService.CanGoBack);
+        }
+
+        private void Navigate(string viewName)
+        {
+            _logger.LogInformation("Navigating to {ViewName}", viewName);
+            CurrentViewModel = _viewModelFactory.Create(viewName);
+            CurrentViewName = viewName;
         }
 
         private void ExitApplication()

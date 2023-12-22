@@ -10,6 +10,10 @@
         <userControls:TitleBarControl DockPanel.Dock="Top" />
         
         <userControls:MenuControl DockPanel.Dock="Top" />
+        <Button Content="Navigate to View Config"
+                Command="{Binding NavigateCommand}"
+                CommandParameter="ViewConfig"
+                DockPanel.Dock="Top"/>
         
         <ContentControl DockPanel.Dock="Top" Content="{Binding CurrentViewModel}" Style="{StaticResource ModernContentControlStyle}" />
     </DockPanel>

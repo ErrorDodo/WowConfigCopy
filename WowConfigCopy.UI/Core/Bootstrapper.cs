@@ -5,6 +5,7 @@ using WowConfigCopy.Common.Interfaces;
 using WowConfigCopy.Common.Services;
 using WowConfigCopy.UI.Interfaces;
 using WowConfigCopy.UI.Services;
+using WowConfigCopy.UI.ViewModels;
 using WowConfigCopy.UI.Views;
 
 namespace WowConfigCopy.UI.Core;
@@ -28,6 +29,9 @@ public class Bootstrapper : PrismBootstrapper
         containerRegistry.RegisterSingleton<IRegistryHelper, RegistryHelper>();
         containerRegistry.RegisterSingleton<IAccountConfigService, AccountConfigService>();
         containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
+        containerRegistry.RegisterSingleton<IViewModelFactory, ViewModelFactory>();
+
+        containerRegistry.Register<ViewConfigModel>();
         
         RegisterLogging.Register(containerRegistry);
     }
