@@ -1,6 +1,10 @@
 using System.Windows;
 using Prism.Ioc;
 using Prism.Unity;
+using WowConfigCopy.Common.Interfaces;
+using WowConfigCopy.Common.Services;
+using WowConfigCopy.UI.Interfaces;
+using WowConfigCopy.UI.Services;
 using WowConfigCopy.UI.Views;
 
 namespace WowConfigCopy.UI.Core;
@@ -20,5 +24,10 @@ public class Bootstrapper : PrismBootstrapper
     
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
+        containerRegistry.RegisterSingleton<IConfigFiles, ConfigFiles>();
+        containerRegistry.RegisterSingleton<IRegistryHelper, RegistryHelper>();
+        containerRegistry.RegisterSingleton<IAccountConfigService, AccountConfigService>();
+        
+        RegisterLogging.Register(containerRegistry);
     }
 }

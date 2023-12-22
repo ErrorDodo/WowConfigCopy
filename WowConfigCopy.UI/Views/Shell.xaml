@@ -8,5 +8,6 @@
         Title="Shell" Height="450" Width="800">
     <Grid>
         <TextBlock Text="{Binding Title}"/>
+        <Button Content="Click Me" Command="{Binding CheckConfigsCommand}"/>
     </Grid>
 </Window>
