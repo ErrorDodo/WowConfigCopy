@@ -28,6 +28,21 @@ public class AccountConfigService : IAccountConfigService
             _logger.LogWarning("No accounts found for WoW version: {WowVersion}", wowVersion);
             return new ObservableCollection<AccountsModel>();
         }
+        
+        var accountsModel = new ObservableCollection<AccountsModel>();
+        foreach (var account in accounts)
+        {
+            // Log all the details
+            _logger.LogDebug("Account: {Account}", account.FolderName);
+            foreach (var realm in account.Realms)
+            {
+                _logger.LogDebug("Realm: {Realm}", realm.RealmName);
+                foreach (var character in realm.Accounts)
+                {
+                    _logger.LogDebug("Character: {Character}", character.AccountName);
+                }
+            }
+        }
 
         return new ObservableCollection<AccountsModel>();
     }
