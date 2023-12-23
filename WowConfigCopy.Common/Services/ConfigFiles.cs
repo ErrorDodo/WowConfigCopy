@@ -69,14 +69,25 @@ namespace WowConfigCopy.Common.Services
 
             foreach (var realmPath in realmFolders)
             {
-                var realmName = Path.GetFileName(realmPath);
-                var parts = realmName.Split(new[] { '(', ')' }, System.StringSplitOptions.RemoveEmptyEntries);
-                if (parts.Length < 2) continue;
+                var directoryName = Path.GetFileName(realmPath);
+                
+                if (directoryName.Equals("SavedVariables", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                var realmRegion = string.Empty;
+                var parts = directoryName.Split(new[] { '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
+        
+                if (parts.Length >= 2)
+                {
+                    realmRegion = parts[1].Trim();
+                }
 
                 var realm = new RealmModel
                 {
-                    RealmName = parts[0].Trim(),
-                    RealmRegion = parts[1].Trim(),
+                    RealmName = directoryName,
+                    RealmRegion = realmRegion,
                     Accounts = await ParseAccountsInRealmAsync(realmPath)
                 };
 
@@ -85,6 +96,8 @@ namespace WowConfigCopy.Common.Services
 
             return new ObservableCollection<RealmModel>(realms);
         }
+
+
 
         private async Task<ObservableCollection<RealmAccountsModel>> ParseAccountsInRealmAsync(string realmPath)
         {

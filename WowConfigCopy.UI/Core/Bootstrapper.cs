@@ -33,7 +33,7 @@ public class Bootstrapper : PrismBootstrapper
         containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
         containerRegistry.RegisterSingleton<IWindowService, WindowService>();
 
-        containerRegistry.Register<FoldersViewModel>();
+        containerRegistry.Register<RegionsViewModel>();
         containerRegistry.Register<SettingsViewModel>();
         containerRegistry.Register<RegionDetailsViewModel>();
         

@@ -11,10 +11,10 @@ using WowConfigCopy.UI.Models;
 
 namespace WowConfigCopy.UI.ViewModels
 {
-    public class FoldersViewModel : BindableBase
+    public class RegionsViewModel : BindableBase
     {
         private readonly IAccountConfigService _accountConfigService;
-        private readonly ILogger<FoldersViewModel> _logger;
+        private readonly ILogger<RegionsViewModel> _logger;
         private readonly ShellViewModel _shellViewModel;
         
         private ObservableCollection<Models.RegionDetails> _distinctRealms = new();
@@ -34,7 +34,7 @@ namespace WowConfigCopy.UI.ViewModels
         
         public DelegateCommand<Models.RegionDetails> NavigateToRegionDetailsCommand { get; private set; }
         
-        public FoldersViewModel(ILogger<FoldersViewModel> logger, IAccountConfigService accountConfigService, ShellViewModel shellViewModel)
+        public RegionsViewModel(ILogger<RegionsViewModel> logger, IAccountConfigService accountConfigService, ShellViewModel shellViewModel)
         {
             _logger = logger;
             _accountConfigService = accountConfigService;
@@ -58,13 +58,14 @@ namespace WowConfigCopy.UI.ViewModels
                 var realmGroups = Accounts
                     .SelectMany(account => account.Realms)
                     .GroupBy(realm => realm.RealmName)
-                    .Select(g => new Models.RegionDetails
+                    .Select(g => new RegionDetails
                     {
                         RealmName = g.Key,
                         Accounts = new ObservableCollection<RealmAccountsModel>(g.SelectMany(x => x.Accounts))
-                    });
+                    })
+                    .OrderBy(regionDetails => regionDetails.RealmName);
 
-                DistinctRealms = new ObservableCollection<Models.RegionDetails>(realmGroups);
+                DistinctRealms = new ObservableCollection<RegionDetails>(realmGroups);
             }
             catch (Exception ex)
             {

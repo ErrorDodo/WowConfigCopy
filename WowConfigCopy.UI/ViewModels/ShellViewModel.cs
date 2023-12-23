@@ -84,7 +84,7 @@ namespace WowConfigCopy.UI.ViewModels
         
         public void Initialize()
         {
-            Navigate("Folders");
+            Navigate("Regions");
         }
     }
 }

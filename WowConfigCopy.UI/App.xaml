@@ -14,8 +14,8 @@
                 <ResourceDictionary Source="/Styles/MacButtons.xaml"/>
                 <ResourceDictionary Source="/Styles/ListStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <DataTemplate DataType="{x:Type viewModels:FoldersViewModel}">
-                <views:Folders/>
+            <DataTemplate DataType="{x:Type viewModels:RegionsViewModel}">
+                <views:Regions/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
                 <views:Settings/>
