@@ -5,9 +5,8 @@ namespace WowConfigCopy.UI.Views;
 
 public partial class Accounts : UserControl
 {
-    public Accounts(AccountsViewModel viewModel)
+    public Accounts()
     {
         InitializeComponent();
-        DataContext = viewModel;
     }
 }

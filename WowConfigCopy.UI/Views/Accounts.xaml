@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" >
     <Grid>
-        <ListView ItemsSource="{Binding Accounts}">
+        <ListView ItemsSource="{Binding Accounts}" Background="{StaticResource BackgroundBrush}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Border Style="{StaticResource RoundedListItemStyle}">
