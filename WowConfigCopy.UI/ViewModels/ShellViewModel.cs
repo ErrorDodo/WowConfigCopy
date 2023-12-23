@@ -10,28 +10,16 @@ namespace WowConfigCopy.UI.ViewModels
     {
         private readonly ILogger<ShellViewModel> _logger;
         private readonly INavigationService _navigationService;
-        private readonly IViewModelFactory _viewModelFactory;
+        private readonly IWindowService _windowService;
 
-        private BindableBase _currentViewModel;
         private string _applicationName = "WoW Config Helper";
-        private string _currentViewName = "Home";
-
-        public BindableBase CurrentViewModel
-        {
-            get => _currentViewModel;
-            set => SetProperty(ref _currentViewModel, value);
-        }
+        public string CurrentViewName => _navigationService.GetCurrentViewName();
+        public BindableBase CurrentViewModel => _navigationService.GetCurrentViewModel();
 
         public string ApplicationName
         {
             get => _applicationName;
             set => SetProperty(ref _applicationName, value);
-        }
-
-        public string CurrentViewName
-        {
-            get => _currentViewName;
-            set => SetProperty(ref _currentViewName, value);
         }
 
         public DelegateCommand ExitCommand { get; private set; }
@@ -42,62 +30,51 @@ namespace WowConfigCopy.UI.ViewModels
         public DelegateCommand MaximizeCommand { get; private set; }
         public DelegateCommand<string> NavigateCommand { get; private set; }
 
-        public ShellViewModel(ILogger<ShellViewModel> logger, INavigationService navigationService, IViewModelFactory viewModelFactory)
+        public ShellViewModel(ILogger<ShellViewModel> logger, INavigationService navigationService, IWindowService windowService)
         {
             _logger = logger;
             _navigationService = navigationService;
-            _viewModelFactory = viewModelFactory;
+            _windowService = windowService;
+            
+            _navigationService.NavigationStateChanged += OnNavigationStateChanged;
 
-            ExitCommand = new DelegateCommand(ExitApplication);
             SaveCommand = new DelegateCommand(SaveSettings);
-            MinimizeCommand = new DelegateCommand(MinimizeWindow);
-            MaximizeCommand = new DelegateCommand(MaximizeWindow);
+            ExitCommand = new DelegateCommand(() => _windowService.CloseWindow());
+            MinimizeCommand = new DelegateCommand(() => _windowService.MinimizeWindow());
+            MaximizeCommand = new DelegateCommand(() => _windowService.MaximizeRestoreWindow());
             NavigateCommand = new DelegateCommand<string>(Navigate);
-
-            GoForwardCommand = new DelegateCommand(
-                    _navigationService.GoForward, 
-                    () => _navigationService.CanGoForward)
-                .ObservesProperty(() => _navigationService.CanGoForward);
-
-            GoBackwardCommand = new DelegateCommand(
-                    _navigationService.GoBack, 
-                    () => _navigationService.CanGoBack)
-                .ObservesProperty(() => _navigationService.CanGoBack);
+            GoBackwardCommand = new DelegateCommand(_navigationService.GoBackward, () => _navigationService.CanGoBackward());
+            GoForwardCommand = new DelegateCommand(_navigationService.GoForward, () => _navigationService.CanGoForward());
         }
 
         private void Navigate(string viewName)
         {
-            _logger.LogInformation("Navigating to {ViewName}", viewName);
-            CurrentViewModel = _viewModelFactory.Create(viewName);
-            CurrentViewName = viewName;
+            _navigationService.NavigateTo(viewName);
+            RaisePropertyChanged(nameof(CurrentViewModel));
+            RaisePropertyChanged(nameof(CurrentViewName));
         }
 
-        private void ExitApplication()
+        private void OnNavigationStateChanged()
         {
-            Application.Current.Shutdown();
+            RaisePropertyChanged(nameof(CurrentViewModel));
+            RaisePropertyChanged(nameof(CurrentViewName));
+            GoBackwardCommand.RaiseCanExecuteChanged();
+            GoForwardCommand.RaiseCanExecuteChanged();
         }
 
         private void SaveSettings()
         {
             _logger.LogInformation("Saving settings");
         }
-        
-        private void MinimizeWindow()
-        {
-            var window = Application.Current.MainWindow;
-            if (window != null)
-            {
-                window.WindowState = WindowState.Minimized;
-            }
-        }
 
-        private void MaximizeWindow()
+        ~ShellViewModel()
         {
-            var window = Application.Current.MainWindow;
-            if (window != null)
-            {
-                window.WindowState = window.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-            }
+            _navigationService.NavigationStateChanged -= OnNavigationStateChanged;
+        }
+        
+        public void Initialize()
+        {
+            Navigate("ViewConfig");
         }
     }
 }

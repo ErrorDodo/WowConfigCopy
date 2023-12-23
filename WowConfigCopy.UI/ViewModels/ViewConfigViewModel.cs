@@ -2,7 +2,7 @@ using Prism.Mvvm;
 
 namespace WowConfigCopy.UI.ViewModels;
 
-public class ViewConfigModel : BindableBase
+public class ViewConfigViewModel : BindableBase
 {
     
 }

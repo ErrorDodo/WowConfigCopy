@@ -14,6 +14,10 @@
                 Command="{Binding NavigateCommand}"
                 CommandParameter="ViewConfig"
                 DockPanel.Dock="Top"/>
+        <Button Content="Navigate to Settings"
+                Command="{Binding NavigateCommand}"
+                CommandParameter="Settings"
+                DockPanel.Dock="Top"/>
         
         <ContentControl DockPanel.Dock="Top" Content="{Binding CurrentViewModel}" Style="{StaticResource ModernContentControlStyle}" />
     </DockPanel>

@@ -17,12 +17,11 @@ public class ViewModelFactory : IViewModelFactory
 
     public BindableBase Create(string viewModelName)
     {
-        switch (viewModelName)
+        return viewModelName switch
         {
-            case "ViewConfig":
-                return _containerProvider.Resolve<ViewConfigModel>();
-            default:
-                throw new ArgumentException($"The view model {viewModelName} is not mapped");
-        }
+            "ViewConfig" => _containerProvider.Resolve<ViewConfigViewModel>(),
+            "Settings" => _containerProvider.Resolve<SettingsViewModel>(),
+            _ => throw new ArgumentException($"The view model {viewModelName} is not mapped")
+        };
     }
 }

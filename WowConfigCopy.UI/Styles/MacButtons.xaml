@@ -79,7 +79,11 @@
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Foreground" Value="DarkGray"/>
             </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Foreground" Value="DarkSlateGray"/>
+            </Trigger>
         </Style.Triggers>
     </Style>
+
 
 </ResourceDictionary>

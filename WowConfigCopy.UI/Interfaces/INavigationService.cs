@@ -1,9 +1,16 @@
+using System;
+using Prism.Mvvm;
+
 namespace WowConfigCopy.UI.Interfaces;
 
 public interface INavigationService
 {
-    void GoBack();
+    void NavigateTo(string viewName);
+    void GoBackward();
     void GoForward();
-    bool CanGoBack { get; }
-    bool CanGoForward { get; }
+    bool CanGoBackward();
+    bool CanGoForward();
+    BindableBase GetCurrentViewModel();
+    string GetCurrentViewName();
+    event Action NavigationStateChanged;
 }

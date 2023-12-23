@@ -1,6 +1,7 @@
 using System.Windows;
 using Prism.Ioc;
 using Prism.Unity;
+using Unity;
 using WowConfigCopy.Common.Interfaces;
 using WowConfigCopy.Common.Services;
 using WowConfigCopy.UI.Interfaces;
@@ -28,10 +29,16 @@ public class Bootstrapper : PrismBootstrapper
         containerRegistry.RegisterSingleton<IConfigFiles, ConfigFiles>();
         containerRegistry.RegisterSingleton<IRegistryHelper, RegistryHelper>();
         containerRegistry.RegisterSingleton<IAccountConfigService, AccountConfigService>();
-        containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
         containerRegistry.RegisterSingleton<IViewModelFactory, ViewModelFactory>();
+        containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
+        containerRegistry.RegisterSingleton<IWindowService, WindowService>();
 
-        containerRegistry.Register<ViewConfigModel>();
+        containerRegistry.Register<ViewConfigViewModel>();
+        containerRegistry.Register<SettingsViewModel>();
+        
+        // containerRegistry.RegisterForNavigation<ViewConfig, ViewConfigViewModel>();
+        // containerRegistry.RegisterForNavigation<Settings, SettingsViewModel>();
+
         
         RegisterLogging.Register(containerRegistry);
     }
