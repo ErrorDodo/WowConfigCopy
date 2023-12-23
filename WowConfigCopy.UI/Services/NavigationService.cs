@@ -11,8 +11,8 @@ namespace WowConfigCopy.UI.Services
     {
         private readonly IViewModelFactory _viewModelFactory;
         private readonly ILogger<NavigationService> _logger;
-        private readonly Stack<BindableBase> _backStack = new Stack<BindableBase>();
-        private readonly Stack<BindableBase> _forwardStack = new Stack<BindableBase>();
+        private readonly Stack<BindableBase> _backStack = new();
+        private readonly Stack<BindableBase> _forwardStack = new();
         private BindableBase _currentViewModel;
         private string _currentViewName;
         private const int MaxStackSize = 10;

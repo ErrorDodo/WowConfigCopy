@@ -39,7 +39,9 @@ public class ViewModelFactory : IViewModelFactory
                 parameterizedViewModel.InitializeWithParameters(parameters);
                 break;
             case null:
-                throw new ArgumentException($"The view model {viewModelName} is not mapped");
+                throw new ArgumentException($"Failed to resolve the view model {viewModelName}");
+            default:
+                break;
         }
 
         return viewModel;

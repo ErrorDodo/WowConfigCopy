@@ -2,9 +2,9 @@ using System.Windows.Controls;
 
 namespace WowConfigCopy.UI.Views;
 
-public partial class RealmDetails : UserControl
+public partial class RegionDetails : UserControl
 {
-    public RealmDetails()
+    public RegionDetails()
     {
         InitializeComponent();
     }

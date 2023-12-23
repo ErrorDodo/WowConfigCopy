@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Prism.Navigation;
 using WowConfigCopy.Common.Models;
 using WowConfigCopy.UI.Interfaces;
+using WowConfigCopy.UI.Models;
 
 namespace WowConfigCopy.UI.ViewModels
 {
@@ -57,9 +58,9 @@ namespace WowConfigCopy.UI.ViewModels
             RaisePropertyChanged(nameof(CurrentViewName));
         }
 
-        public void NavigateToRealmDetails(string regionName)
+        public void NavigateToRealmDetails(Models.RegionDetails regionDetails)
         {
-            var parameters = new NavigationParameters { { "region", regionName } };
+            var parameters = new NavigationParameters { { "region", regionDetails.RealmName }, { "accounts", regionDetails.Accounts } };
             _navigationService.NavigateTo("RegionDetails", parameters);
         }
 

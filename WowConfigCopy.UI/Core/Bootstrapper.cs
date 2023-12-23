@@ -35,10 +35,12 @@ public class Bootstrapper : PrismBootstrapper
 
         containerRegistry.Register<FoldersViewModel>();
         containerRegistry.Register<SettingsViewModel>();
+        containerRegistry.Register<RegionDetailsViewModel>();
         
+        // Leave these commented not sure when they will be needed again
         // containerRegistry.RegisterForNavigation<ViewConfig, ViewConfigViewModel>();
         // containerRegistry.RegisterForNavigation<Settings, SettingsViewModel>();
-
+        // containerRegistry.RegisterForNavigation<RegionDetails, RegionDetailsViewModel>();
         
         RegisterLogging.Register(containerRegistry);
     }
