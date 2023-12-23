@@ -17,8 +17,8 @@ namespace WowConfigCopy.UI.ViewModels
         private readonly ILogger<RegionsViewModel> _logger;
         private readonly ShellViewModel _shellViewModel;
         
-        private ObservableCollection<Models.RegionDetails> _distinctRealms = new();
-        public ObservableCollection<Models.RegionDetails> DistinctRealms
+        private ObservableCollection<RegionDetails> _distinctRealms = new();
+        public ObservableCollection<RegionDetails> DistinctRealms
         {
             get => _distinctRealms;
             set => SetProperty(ref _distinctRealms, value);
@@ -32,7 +32,7 @@ namespace WowConfigCopy.UI.ViewModels
             set => SetProperty(ref _accounts, value);
         }
         
-        public DelegateCommand<Models.RegionDetails> NavigateToRegionDetailsCommand { get; private set; }
+        public DelegateCommand<RegionDetails> NavigateToRegionDetailsCommand { get; private set; }
         
         public RegionsViewModel(ILogger<RegionsViewModel> logger, IAccountConfigService accountConfigService, ShellViewModel shellViewModel)
         {
@@ -42,7 +42,7 @@ namespace WowConfigCopy.UI.ViewModels
             InitializeAsync();
             
             
-            NavigateToRegionDetailsCommand = new DelegateCommand<Models.RegionDetails>(NavigateToRegionDetails);
+            NavigateToRegionDetailsCommand = new DelegateCommand<RegionDetails>(NavigateToRegionDetails);
         }
 
         private void NavigateToRegionDetails(RegionDetails regionDetails)

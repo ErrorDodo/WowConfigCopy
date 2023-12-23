@@ -58,9 +58,13 @@ namespace WowConfigCopy.UI.ViewModels
             RaisePropertyChanged(nameof(CurrentViewName));
         }
 
-        public void NavigateToRealmDetails(Models.RegionDetails regionDetails)
+        public void NavigateToRealmDetails(RegionDetails regionDetails)
         {
-            var parameters = new NavigationParameters { { "region", regionDetails.RealmName }, { "accounts", regionDetails.Accounts } };
+            var parameters = new NavigationParameters
+            {
+                { "region", regionDetails.RealmName }, 
+                { "accounts", regionDetails.Accounts }
+            };
             _navigationService.NavigateTo("RegionDetails", parameters);
         }
 
