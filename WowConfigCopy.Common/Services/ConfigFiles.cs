@@ -1,5 +1,8 @@
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Threading.Tasks;
 using WowConfigCopy.Common.Interfaces;
 using WowConfigCopy.Common.Models;
 
@@ -15,8 +18,8 @@ namespace WowConfigCopy.Common.Services
             _logger = logger;
             _registryHelper = registryHelper;
         }
-        
-        public ObservableCollection<AccountModel> ReadConfigFiles(string wowVersion)
+
+        public async Task<ObservableCollection<AccountModel>> ReadConfigFilesAsync(string wowVersion)
         {
             _logger.LogInformation("Reading WoW config files for version: {WowVersion}", wowVersion);
             var wowInstallPath = _registryHelper.GetWowInstallPath();
@@ -34,20 +37,20 @@ namespace WowConfigCopy.Common.Services
                 return new ObservableCollection<AccountModel>();
             }
 
-            var accounts = ParseAccountFolders(accountPaths);
+            var accounts = await ParseAccountFoldersAsync(accountPaths);
             _logger.LogInformation("Config file parsing completed.");
             return new ObservableCollection<AccountModel>(accounts);
         }
-    
-        private IEnumerable<AccountModel> ParseAccountFolders(string path)
+
+        private async Task<IEnumerable<AccountModel>> ParseAccountFoldersAsync(string path)
         {
-            var accountFolders = Directory.GetDirectories(path);
+            var accountFolders = await Task.Run(() => Directory.GetDirectories(path));
             var accounts = new List<AccountModel>();
 
             foreach (var accountFolderPath in accountFolders)
             {
                 var accountFolderName = Path.GetFileName(accountFolderPath);
-                var realms = ParseRealmFolders(accountFolderPath);
+                var realms = await ParseRealmFoldersAsync(accountFolderPath);
 
                 accounts.Add(new AccountModel
                 {
@@ -55,37 +58,37 @@ namespace WowConfigCopy.Common.Services
                     Realms = realms
                 });
             }
-            
+
             return accounts;
         }
 
-        private ObservableCollection<RealmModel> ParseRealmFolders(string path)
+        private async Task<ObservableCollection<RealmModel>> ParseRealmFoldersAsync(string path)
         {
-            var realmFolders = Directory.GetDirectories(path);
+            var realmFolders = await Task.Run(() => Directory.GetDirectories(path));
             var realms = new List<RealmModel>();
 
             foreach (var realmPath in realmFolders)
             {
                 var realmName = Path.GetFileName(realmPath);
-                var parts = realmName.Split(new[] { '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
+                var parts = realmName.Split(new[] { '(', ')' }, System.StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Length < 2) continue;
 
                 var realm = new RealmModel
                 {
                     RealmName = parts[0].Trim(),
                     RealmRegion = parts[1].Trim(),
-                    Accounts = ParseAccountsInRealm(realmPath)
+                    Accounts = await ParseAccountsInRealmAsync(realmPath)
                 };
 
                 realms.Add(realm);
             }
-            
+
             return new ObservableCollection<RealmModel>(realms);
         }
 
-        private static ObservableCollection<RealmAccountsModel> ParseAccountsInRealm(string realmPath)
+        private async Task<ObservableCollection<RealmAccountsModel>> ParseAccountsInRealmAsync(string realmPath)
         {
-            var accountFolders = Directory.GetDirectories(realmPath);
+            var accountFolders = await Task.Run(() => Directory.GetDirectories(realmPath));
             var accounts = new List<RealmAccountsModel>();
 
             foreach (var accountPath in accountFolders)
@@ -97,7 +100,7 @@ namespace WowConfigCopy.Common.Services
                     ConfigPath = accountPath
                 });
             }
-            
+
             return new ObservableCollection<RealmAccountsModel>(accounts);
         }
     }

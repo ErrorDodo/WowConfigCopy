@@ -1,9 +1,95 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
     <Style x:Key="RoundedListItemStyle" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
         <Setter Property="CornerRadius" Value="10"/>
         <Setter Property="Margin" Value="5"/>
         <Setter Property="Padding" Value="10"/>
     </Style>
+
+    <Style x:Key="AccountStackPanelStyle" TargetType="StackPanel">
+        <Setter Property="Background" Value="{StaticResource BackgroundBrush}"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Orientation" Value="Vertical"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+    </Style>
+
+    <Style x:Key="AccountTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style x:Key="RoundedListItemBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource PrimaryButtonBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="Margin" Value="5"/>
+    </Style>
+
+    
+    <Style x:Key="ModernExpanderStyle" TargetType="{x:Type Expander}">
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Expander}">
+                    <Border BorderBrush="{StaticResource AccentBrush}"
+                            BorderThickness="2"
+                            CornerRadius="10" > <!-- Rounded corners for the whole Expander -->
+                        <DockPanel>
+                            <ToggleButton x:Name="HeaderSite"
+                                          DockPanel.Dock="Top"
+                                          Content="{TemplateBinding Header}"
+                                          IsChecked="{Binding Path=IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          FontFamily="{TemplateBinding FontFamily}"
+                                          FontSize="16"
+                                          FontWeight="Bold"
+                                          Background="{StaticResource PrimaryButtonBrush}">
+                                <ToggleButton.Style>
+                                    <Style TargetType="{x:Type ToggleButton}">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="10">
+                                                        <ContentPresenter HorizontalAlignment="Center"
+                                                                          VerticalAlignment="Center"
+                                                                          RecognizesAccessKey="True"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ToggleButton.Style>
+                            </ToggleButton>
+                            <ContentPresenter x:Name="ExpandSite"
+                                              DockPanel.Dock="Bottom"
+                                              Visibility="Collapsed"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Margin="{TemplateBinding Padding}" /> <!-- Removed Padding, using Margin instead -->
+                        </DockPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="True">
+                            <Setter TargetName="ExpandSite" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

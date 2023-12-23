@@ -2,9 +2,9 @@ using System.Windows.Controls;
 
 namespace WowConfigCopy.UI.Views;
 
-public partial class Accounts : UserControl
+public partial class Folders : UserControl
 {
-    public Accounts()
+    public Folders()
     {
         InitializeComponent();
     }

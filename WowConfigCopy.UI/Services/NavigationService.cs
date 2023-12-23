@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Prism.Mvvm;
+using Prism.Navigation;
 using WowConfigCopy.UI.Interfaces;
 
 namespace WowConfigCopy.UI.Services
@@ -24,7 +25,7 @@ namespace WowConfigCopy.UI.Services
             _logger = logger;
         }
 
-        public void NavigateTo(string viewName)
+        public void NavigateTo(string viewName, NavigationParameters parameters = null)
         {
             if (_currentViewModel != null)
             {
@@ -36,7 +37,14 @@ namespace WowConfigCopy.UI.Services
             }
 
             _logger.LogInformation($"Navigating to {viewName}");
-            _currentViewModel = _viewModelFactory.Create(viewName);
+            var viewModel = _viewModelFactory.Create(viewName, parameters);
+
+            if (viewModel is IInitializeWithParameters parameterizedViewModel && parameters != null)
+            {
+                parameterizedViewModel.InitializeWithParameters(parameters);
+            }
+
+            _currentViewModel = viewModel;
             _currentViewName = FormatViewName(viewName);
             _forwardStack.Clear();
             OnNavigationStateChanged();

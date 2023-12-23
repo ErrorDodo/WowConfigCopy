@@ -1,0 +1,50 @@
+<UserControl x:Class="WowConfigCopy.UI.Views.Folders"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:converters="clr-namespace:WowConfigCopy.UI.Converters">
+    <UserControl.Resources>
+        <converters:RegionsToStringConverter x:Key="RegionsToStringConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <ListView ItemsSource="{Binding Accounts}" Background="{StaticResource BackgroundBrush}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Expander Style="{StaticResource ModernExpanderStyle}">
+                        <Expander.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Realms, Converter={StaticResource RegionsToStringConverter}}" 
+                                           Style="{StaticResource AccountTextBlockStyle}"/>
+                            </DataTemplate>
+                        </Expander.HeaderTemplate>
+                        <ListView ItemsSource="{Binding Realms}" Background="{StaticResource BackgroundBrush}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource RoundedListItemBorderStyle}">
+                                        <StackPanel Style="{StaticResource AccountStackPanelStyle}">
+                                            <!-- When clicked, navigate to the new page -->
+                                            <TextBlock Text="{Binding RealmName}" Style="{StaticResource HeadingFontStyle}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="MouseUp">
+                                                        <i:InvokeCommandAction Command="{Binding DataContext.NavigateCommand, 
+                                                                                        RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                                               CommandParameter="{Binding RealmRegion}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding RealmRegion}" Style="{StaticResource BaseFontStyle}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Expander>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</UserControl>

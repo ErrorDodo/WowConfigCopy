@@ -1,7 +1,10 @@
+using System.Collections.Generic;
 using System.Windows;
 using Prism.Commands;
 using Prism.Mvvm;
 using Microsoft.Extensions.Logging;
+using Prism.Navigation;
+using WowConfigCopy.Common.Models;
 using WowConfigCopy.UI.Interfaces;
 
 namespace WowConfigCopy.UI.ViewModels
@@ -54,6 +57,12 @@ namespace WowConfigCopy.UI.ViewModels
             RaisePropertyChanged(nameof(CurrentViewName));
         }
 
+        public void NavigateToRealmDetails(string regionName)
+        {
+            var parameters = new NavigationParameters { { "region", regionName } };
+            _navigationService.NavigateTo("RegionDetails", parameters);
+        }
+
         private void OnNavigationStateChanged()
         {
             RaisePropertyChanged(nameof(CurrentViewModel));
@@ -74,7 +83,7 @@ namespace WowConfigCopy.UI.ViewModels
         
         public void Initialize()
         {
-            Navigate("Accounts");
+            Navigate("Folders");
         }
     }
 }

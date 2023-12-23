@@ -1,9 +1,10 @@
 using System.Collections.ObjectModel;
-using WowConfigCopy.UI.Models;
+using System.Threading.Tasks;
+using WowConfigCopy.Common.Models;
 
 namespace WowConfigCopy.UI.Interfaces;
 
 public interface IAccountConfigService
 {
-    ObservableCollection<AccountsModel> ReadConfig();
+    Task<ObservableCollection<AccountModel>> ReadConfigAsync();
 }
