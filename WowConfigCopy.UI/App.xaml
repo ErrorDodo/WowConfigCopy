@@ -12,9 +12,10 @@
                 <ResourceDictionary Source="/Styles/FontResources.xaml"/>
                 <ResourceDictionary Source="/Styles/ContentControl.xaml"/>
                 <ResourceDictionary Source="/Styles/MacButtons.xaml"/>
+                <ResourceDictionary Source="/Styles/ListStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <DataTemplate DataType="{x:Type viewModels:ViewConfigViewModel}">
-                <views:ViewConfig/>
+            <DataTemplate DataType="{x:Type viewModels:AccountsViewModel}">
+                <views:Accounts/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
                 <views:Settings/>

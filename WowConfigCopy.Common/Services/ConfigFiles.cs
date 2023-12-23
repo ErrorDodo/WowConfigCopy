@@ -1,7 +1,5 @@
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Collections.ObjectModel;
 using WowConfigCopy.Common.Interfaces;
 using WowConfigCopy.Common.Models;
 
@@ -18,7 +16,7 @@ namespace WowConfigCopy.Common.Services
             _registryHelper = registryHelper;
         }
         
-        public List<AccountModel> ReadConfigFiles(string wowVersion)
+        public ObservableCollection<AccountModel> ReadConfigFiles(string wowVersion)
         {
             _logger.LogInformation("Reading WoW config files for version: {WowVersion}", wowVersion);
             var wowInstallPath = _registryHelper.GetWowInstallPath();
@@ -26,19 +24,19 @@ namespace WowConfigCopy.Common.Services
             if (string.IsNullOrEmpty(wowInstallPath))
             {
                 _logger.LogWarning("WoW installation path not found.");
-                return new List<AccountModel>();
+                return new ObservableCollection<AccountModel>();
             }
 
             var accountPaths = Path.Combine(wowInstallPath, "WTF", "Account");
             if (!Directory.Exists(accountPaths))
             {
                 _logger.LogWarning("WoW account path not found at: {AccountPaths}", accountPaths);
-                return new List<AccountModel>();
+                return new ObservableCollection<AccountModel>();
             }
 
-            var accounts = ParseAccountFolders(accountPaths).ToList();
+            var accounts = ParseAccountFolders(accountPaths);
             _logger.LogInformation("Config file parsing completed.");
-            return accounts;
+            return new ObservableCollection<AccountModel>(accounts);
         }
     
         private IEnumerable<AccountModel> ParseAccountFolders(string path)
@@ -61,7 +59,7 @@ namespace WowConfigCopy.Common.Services
             return accounts;
         }
 
-        private List<RealmModel> ParseRealmFolders(string path)
+        private ObservableCollection<RealmModel> ParseRealmFolders(string path)
         {
             var realmFolders = Directory.GetDirectories(path);
             var realms = new List<RealmModel>();
@@ -81,11 +79,11 @@ namespace WowConfigCopy.Common.Services
 
                 realms.Add(realm);
             }
-
-            return realms;
+            
+            return new ObservableCollection<RealmModel>(realms);
         }
 
-        private static List<RealmAccountsModel> ParseAccountsInRealm(string realmPath)
+        private static ObservableCollection<RealmAccountsModel> ParseAccountsInRealm(string realmPath)
         {
             var accountFolders = Directory.GetDirectories(realmPath);
             var accounts = new List<RealmAccountsModel>();
@@ -99,8 +97,8 @@ namespace WowConfigCopy.Common.Services
                     ConfigPath = accountPath
                 });
             }
-
-            return accounts;
+            
+            return new ObservableCollection<RealmAccountsModel>(accounts);
         }
     }
 }

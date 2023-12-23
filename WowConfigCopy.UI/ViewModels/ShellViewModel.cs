@@ -74,7 +74,7 @@ namespace WowConfigCopy.UI.ViewModels
         
         public void Initialize()
         {
-            Navigate("ViewConfig");
+            Navigate("Accounts");
         }
     }
 }

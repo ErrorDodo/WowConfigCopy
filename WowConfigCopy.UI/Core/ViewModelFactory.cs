@@ -19,7 +19,7 @@ public class ViewModelFactory : IViewModelFactory
     {
         return viewModelName switch
         {
-            "ViewConfig" => _containerProvider.Resolve<ViewConfigViewModel>(),
+            "Accounts" => _containerProvider.Resolve<AccountsViewModel>(),
             "Settings" => _containerProvider.Resolve<SettingsViewModel>(),
             _ => throw new ArgumentException($"The view model {viewModelName} is not mapped")
         };

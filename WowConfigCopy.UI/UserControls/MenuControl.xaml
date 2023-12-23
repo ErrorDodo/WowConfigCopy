@@ -8,6 +8,7 @@
     <Menu Style="{StaticResource ModernMenuStyle}">
         <MenuItem Header="File" Style="{StaticResource ModernMenuItemStyle}">
             <MenuItem Header="Save" Command="{Binding SaveCommand}" Style="{StaticResource ModernMenuItemStyle}"/>
+            <MenuItem Header="Settings" Command="{Binding NavigateCommand}" CommandParameter="Settings" Style="{StaticResource ModernMenuItemStyle}"/>
         </MenuItem>
     </Menu>
 </UserControl>

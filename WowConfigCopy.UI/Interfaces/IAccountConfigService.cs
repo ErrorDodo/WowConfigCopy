@@ -1,6 +1,9 @@
+using System.Collections.ObjectModel;
+using WowConfigCopy.UI.Models;
+
 namespace WowConfigCopy.UI.Interfaces;
 
 public interface IAccountConfigService
 {
-    void ReadConfig();
+    ObservableCollection<AccountsModel> ReadConfig();
 }

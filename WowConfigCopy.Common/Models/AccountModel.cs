@@ -1,7 +1,9 @@
+using System.Collections.ObjectModel;
+
 namespace WowConfigCopy.Common.Models;
 
 public class AccountModel
 {
     public string FolderName { get; set; }
-    public List<RealmModel> Realms { get; set; } = new();
+    public ObservableCollection<RealmModel> Realms { get; set; } = new();
 }
