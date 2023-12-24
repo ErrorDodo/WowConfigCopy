@@ -6,7 +6,6 @@ using Prism.Mvvm;
 using Prism.Navigation;
 using WowConfigCopy.Common.Models;
 using WowConfigCopy.UI.Interfaces;
-using WowConfigCopy.UI.Models;
 
 namespace WowConfigCopy.UI.ViewModels
 {
@@ -15,7 +14,7 @@ namespace WowConfigCopy.UI.ViewModels
         private readonly ILogger<RegionDetailsViewModel> _logger;
         private string _regionName = string.Empty;
         
-        private ObservableCollection<AccountVisibilityModel> _accountVisibilityModels;
+        private ObservableCollection<RealmAccountsModel> _realmAccounts;
 
         public string RegionName
         {
@@ -23,24 +22,23 @@ namespace WowConfigCopy.UI.ViewModels
             set => SetProperty(ref _regionName, value);
         }
         
-        public ObservableCollection<AccountVisibilityModel> AccountVisibilityModels
+        public ObservableCollection<RealmAccountsModel> RealmAccounts
         {
-            get => _accountVisibilityModels;
-            set => SetProperty(ref _accountVisibilityModels, value);
+            get => _realmAccounts;
+            set => SetProperty(ref _realmAccounts, value);
         }
         
-        public DelegateCommand<AccountVisibilityModel> ToggleButtonCommand { get; private set; }
+        public DelegateCommand<RealmAccountsModel> ToggleButtonCommand { get; }
 
         public RegionDetailsViewModel(ILogger<RegionDetailsViewModel> logger)
         {
             _logger = logger;
-            ToggleButtonCommand = new DelegateCommand<AccountVisibilityModel>(ExecuteToggleButtonCommand);
+            ToggleButtonCommand = new DelegateCommand<RealmAccountsModel>(ExecuteToggleButtonCommand);
         }
         
-        // This function is for testing purposes only
-        private void ExecuteToggleButtonCommand(AccountVisibilityModel account)
+        private void ExecuteToggleButtonCommand(RealmAccountsModel model)
         {
-            _logger.LogInformation($"ToggleButton pressed for account: {account.AccountName}");
+            _logger.LogInformation($"Toggling visibility for account {model.AccountName}");
         }
 
         public void InitializeWithParameters(NavigationParameters parameters)
@@ -59,8 +57,7 @@ namespace WowConfigCopy.UI.ViewModels
             
             if (parameters.TryGetValue("accounts", out ObservableCollection<RealmAccountsModel> accounts))
             {
-                AccountVisibilityModels = new ObservableCollection<AccountVisibilityModel>(
-                    accounts.Select(account => new AccountVisibilityModel(account)));
+                RealmAccounts = accounts;
                 _logger.LogInformation($"Received accounts parameter. Number of accounts: {accounts.Count}");
             }
             else

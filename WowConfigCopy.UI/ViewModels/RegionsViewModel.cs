@@ -8,7 +8,6 @@ using Prism.Mvvm;
 using WowConfigCopy.Common.Models;
 using WowConfigCopy.UI.Dto;
 using WowConfigCopy.UI.Interfaces;
-using WowConfigCopy.UI.Models;
 
 namespace WowConfigCopy.UI.ViewModels
 {
