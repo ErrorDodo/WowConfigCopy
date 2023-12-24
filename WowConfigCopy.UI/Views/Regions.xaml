@@ -23,7 +23,6 @@
                 </StackPanel>
             </Border>
         </DataTemplate>
-
     </UserControl.Resources>
 
     <Grid>

@@ -3,10 +3,44 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:WowConfigCopy.UI.Views"
              mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="ListViewItemTemplate">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <ToggleButton Name="ExpanderButton" Grid.Row="0" Content="{Binding AccountName}" Style="{StaticResource ToggleButtonStyle}" 
+                              VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                <StackPanel Grid.Row="1" x:Name="OptionsPanel" Visibility="Collapsed">
+                    <Border Background="{StaticResource BackgroundBrush}" CornerRadius="5" Padding="10">
+                        <StackPanel>
+                            <Button Content="Option 1" Margin="5"/>
+                            <Button Content="Option 2" Margin="5"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+            <DataTemplate.Triggers>
+                <Trigger SourceName="ExpanderButton" Property="IsChecked" Value="True">
+                    <Setter TargetName="OptionsPanel" Property="Visibility" Value="Visible"/>
+                </Trigger>
+                <Trigger SourceName="ExpanderButton" Property="IsChecked" Value="False">
+                    <Setter TargetName="OptionsPanel" Property="Visibility" Value="Collapsed"/>
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+    </UserControl.Resources>
+
     <Grid>
-        <!-- UI elements go here -->
-        <TextBlock Text="{Binding RegionName}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="{Binding RegionName}" FontSize="24" Foreground="{StaticResource TextBrush}" Margin="5"/>
+            <ListView ItemsSource="{Binding Accounts}"
+                      ItemTemplate="{StaticResource ListViewItemTemplate}"
+                      Style="{StaticResource ModernListViewStyle}">
+            </ListView>
+        </StackPanel>
     </Grid>
 </UserControl>
