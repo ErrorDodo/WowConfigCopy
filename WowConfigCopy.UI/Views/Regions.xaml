@@ -8,7 +8,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock Text="{Binding RealmName}" 
                                Foreground="{StaticResource TextBrush}" 
-                               FontFamily="{StaticResource SegoeUiFontFamily}" 
+                               FontFamily="{StaticResource ZenKakuGothicAntiqueBold}" 
                                FontSize="16" 
                                FontWeight="Bold" 
                                Margin="5">

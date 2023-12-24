@@ -14,9 +14,9 @@
 
                 <!-- Navigation and Title -->
                 <StackPanel Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding ApplicationName}" Foreground="{StaticResource TextBrush}" Margin="5" VerticalAlignment="Center" />
-                    <TextBlock Text=" - " Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" />
-                    <TextBlock Text="{Binding CurrentViewName}" Foreground="{StaticResource TextBrush}" Margin="5" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding ApplicationName}" Foreground="{StaticResource TextBrush}" Margin="5" VerticalAlignment="Center" FontFamily="{StaticResource ZenKakuGothicAntiqueBold}"/>
+                    <TextBlock Text=" - " Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" FontFamily="{StaticResource ZenKakuGothicAntiqueRegular}" />
+                    <TextBlock Text="{Binding CurrentViewName}" Foreground="{StaticResource TextBrush}" Margin="5" VerticalAlignment="Center" FontFamily="{StaticResource ZenKakuGothicAntiqueRegular}" />
                     <Button Content="◀" Style="{StaticResource MacNavigationButtonStyle}" Command="{Binding GoBackwardCommand}" />
                     <Button Content="▶" Style="{StaticResource MacNavigationButtonStyle}" Command="{Binding GoForwardCommand}" />
 

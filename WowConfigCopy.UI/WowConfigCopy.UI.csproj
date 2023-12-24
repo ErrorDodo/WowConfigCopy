@@ -18,4 +18,21 @@
       <ProjectReference Include="..\WowConfigCopy.Common\WowConfigCopy.Common.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Resources\ZenKakuGothicAntique-Black.ttf" />
+      <Resource Include="Resources\ZenKakuGothicAntique-Black.ttf" />
+      <None Remove="Resources\ZenKakuGothicAntique-Bold.ttf" />
+      <Resource Include="Resources\ZenKakuGothicAntique-Bold.ttf" />
+      <None Remove="Resources\ZenKakuGothicAntique-Light.ttf" />
+      <Resource Include="Resources\ZenKakuGothicAntique-Light.ttf" />
+      <None Remove="Resources\ZenKakuGothicAntique-Medium.ttf" />
+      <Resource Include="Resources\ZenKakuGothicAntique-Medium.ttf" />
+      <None Remove="Resources\ZenKakuGothicAntique-Regular.ttf" />
+      <Resource Include="Resources\ZenKakuGothicAntique-Regular.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Extensions\" />
+    </ItemGroup>
+
 </Project>

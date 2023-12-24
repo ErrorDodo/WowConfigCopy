@@ -6,9 +6,9 @@
              xmlns:local="clr-namespace:WowConfigCopy.UI.UserControls"
              mc:Ignorable="d">
     <Menu Style="{StaticResource ModernMenuStyle}">
-        <MenuItem Header="File" Style="{StaticResource ModernMenuItemStyle}">
-            <MenuItem Header="Save" Command="{Binding SaveCommand}" Style="{StaticResource ModernMenuItemStyle}"/>
-            <MenuItem Header="Settings" Command="{Binding NavigateCommand}" CommandParameter="Settings" Style="{StaticResource ModernMenuItemStyle}"/>
+        <MenuItem Header="File" Style="{StaticResource ModernMenuItemStyle}" FontFamily="{StaticResource ZenKakuGothicAntiqueRegular}">
+            <MenuItem Header="Save" Command="{Binding SaveCommand}" Style="{StaticResource ModernMenuItemStyle}" FontFamily="{StaticResource ZenKakuGothicAntiqueRegular}"/>
+            <MenuItem Header="Settings" Command="{Binding NavigateCommand}" CommandParameter="Settings" Style="{StaticResource ModernMenuItemStyle}" FontFamily="{StaticResource ZenKakuGothicAntiqueRegular}"/>
         </MenuItem>
     </Menu>
 </UserControl>

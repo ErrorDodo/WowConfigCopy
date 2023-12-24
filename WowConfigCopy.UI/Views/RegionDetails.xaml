@@ -12,32 +12,28 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <ToggleButton Name="ExpanderButton" Grid.Row="0" Content="{Binding AccountName}" Style="{StaticResource ToggleButtonStyle}" 
+                <ToggleButton Grid.Row="0" Content="{Binding AccountName}"
+                              Style="{StaticResource ToggleButtonStyle}"
+                              Command="{Binding DataContext.ToggleButtonCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                              CommandParameter="{Binding}"
+                              IsChecked="{Binding IsExpanded, Mode=TwoWay}"
                               VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-                <StackPanel Grid.Row="1" x:Name="OptionsPanel" Visibility="Collapsed">
+                <StackPanel Grid.Row="1" Style="{StaticResource AnimatedStackPanelStyle}">
                     <Border Background="{StaticResource BackgroundBrush}" CornerRadius="5" Padding="10">
-                        <StackPanel>
-                            <Button Content="Option 1" Margin="5"/>
-                            <Button Content="Option 2" Margin="5"/>
+                        <StackPanel Orientation="Vertical">
+                            <Button Content="Option 1" Style="{StaticResource OptionButtonStyle}"/>
+                            <Button Content="Option 2" Style="{StaticResource OptionButtonStyle}"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
             </Grid>
-            <DataTemplate.Triggers>
-                <Trigger SourceName="ExpanderButton" Property="IsChecked" Value="True">
-                    <Setter TargetName="OptionsPanel" Property="Visibility" Value="Visible"/>
-                </Trigger>
-                <Trigger SourceName="ExpanderButton" Property="IsChecked" Value="False">
-                    <Setter TargetName="OptionsPanel" Property="Visibility" Value="Collapsed"/>
-                </Trigger>
-            </DataTemplate.Triggers>
         </DataTemplate>
     </UserControl.Resources>
 
     <Grid>
         <StackPanel Orientation="Vertical">
             <TextBlock Text="{Binding RegionName}" FontSize="24" Foreground="{StaticResource TextBrush}" Margin="5"/>
-            <ListView ItemsSource="{Binding Accounts}"
+            <ListView ItemsSource="{Binding AccountVisibilityModels}"
                       ItemTemplate="{StaticResource ListViewItemTemplate}"
                       Style="{StaticResource ModernListViewStyle}">
             </ListView>

@@ -1,0 +1,1 @@
+These fonts get packaged with the application you shouldn't have to worry about installing them.

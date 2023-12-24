@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using WowConfigCopy.Common.Models;
 
-namespace WowConfigCopy.UI.Models;
+namespace WowConfigCopy.UI.Dto;
 
 public class RegionDetails
 {

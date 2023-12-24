@@ -3,7 +3,7 @@
     <Style x:Key="ModernMenuStyle" TargetType="{x:Type Menu}">
         <Setter Property="Background" Value="{StaticResource BackgroundBrush}"/>
         <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
-        <Setter Property="FontFamily" Value="{StaticResource SegoeUiFontFamily}"/>
+        <Setter Property="FontFamily" Value="{StaticResource ZenKakuGothicAntiqueRegular}"/>
         <Setter Property="FontSize" Value="14"/>
     </Style>
     

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Prism.Commands;
 using Prism.Mvvm;
 using WowConfigCopy.Common.Models;
+using WowConfigCopy.UI.Dto;
 using WowConfigCopy.UI.Interfaces;
 using WowConfigCopy.UI.Models;
 
