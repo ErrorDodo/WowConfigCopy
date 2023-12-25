@@ -45,5 +45,24 @@ namespace WowConfigCopy.UI.Services
 
             return accounts;
         }
+        
+        public async Task<ObservableCollection<RealmAccountsModel>> GetRealmsAccountsAsync()
+        {
+            var realmAccounts = await _configFiles.GetRealmsAccounts();
+
+            if (!realmAccounts.Any())
+            {
+                _logger.LogWarning("No realm accounts found.");
+                return new ObservableCollection<RealmAccountsModel>();
+            }
+            
+            foreach (var realmAccount in realmAccounts)
+            {
+                _logger.LogInformation("Realm Account: {AccountName}, Config Path: {ConfigPath}", 
+                    realmAccount.AccountName, realmAccount.ConfigPath);
+            }
+
+            return realmAccounts;
+        }
     }
 }

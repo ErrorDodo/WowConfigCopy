@@ -39,7 +39,7 @@ namespace WowConfigCopy.UI.ViewModels
             _logger = logger;
             _accountConfigService = accountConfigService;
             _shellViewModel = shellViewModel;
-            InitializeAsync();
+            InitializeAsync().ConfigureAwait(true);
             
             
             NavigateToRegionDetailsCommand = new DelegateCommand<RegionDetails>(NavigateToRegionDetails);

@@ -7,4 +7,5 @@ namespace WowConfigCopy.UI.Interfaces;
 public interface IAccountConfigService
 {
     Task<ObservableCollection<AccountModel>> ReadConfigAsync();
+    Task<ObservableCollection<RealmAccountsModel>> GetRealmsAccountsAsync();
 }
