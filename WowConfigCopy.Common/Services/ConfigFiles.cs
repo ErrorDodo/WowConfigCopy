@@ -1,8 +1,5 @@
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Threading.Tasks;
 using WowConfigCopy.Common.Interfaces;
 using WowConfigCopy.Common.Models;
 
@@ -18,6 +15,34 @@ namespace WowConfigCopy.Common.Services
             _logger = logger;
             _registryHelper = registryHelper;
         }
+
+        public async Task<ObservableCollection<RealmAccountsModel>> GetRealmsAccounts()
+        {
+            _logger.LogInformation("Retrieving Realm Accounts");
+
+            var wowInstallPath = _registryHelper.GetWowInstallPath();
+            if (string.IsNullOrEmpty(wowInstallPath))
+            {
+                _logger.LogWarning("WoW installation path not found.");
+                return new ObservableCollection<RealmAccountsModel>();
+            }
+
+            var accountPaths = Path.Combine(wowInstallPath, "WTF", "Account");
+            var accountFolders = GetDirectoriesSafe(accountPaths);
+
+            var tasks = accountFolders.SelectMany(accountFolder =>
+                GetDirectoriesSafe(accountFolder)
+                    .Where(realmFolder => !Path.GetFileName(realmFolder).Equals("SavedVariables", StringComparison.OrdinalIgnoreCase))
+                    .SelectMany(GetDirectoriesSafe)
+                    .Select(ParseAccountsInRealmAsync)).ToList();
+
+            var allResults = await Task.WhenAll(tasks);
+            var realmAccounts = allResults.SelectMany(x => x).ToList();
+
+            return new ObservableCollection<RealmAccountsModel>(realmAccounts);
+        }
+
+
 
         public async Task<ObservableCollection<AccountModel>> ReadConfigFilesAsync(string wowVersion)
         {
@@ -37,84 +62,70 @@ namespace WowConfigCopy.Common.Services
                 return new ObservableCollection<AccountModel>();
             }
 
-            var accounts = await ParseAccountFoldersAsync(accountPaths);
+            var accountFolders = GetDirectoriesSafe(accountPaths);
+            var tasks = accountFolders.Select(ParseAccountFolderAsync);
+            var accounts = await Task.WhenAll(tasks);
+
             _logger.LogInformation("Config file parsing completed.");
-            return new ObservableCollection<AccountModel>(accounts);
+            return new ObservableCollection<AccountModel>(accounts.Where(_ => true));
         }
 
-        private async Task<IEnumerable<AccountModel>> ParseAccountFoldersAsync(string path)
+        private async Task<AccountModel> ParseAccountFolderAsync(string accountFolderPath)
         {
-            var accountFolders = await Task.Run(() => Directory.GetDirectories(path));
-            var accounts = new List<AccountModel>();
+            var accountFolderName = Path.GetFileName(accountFolderPath);
+            var realms = await ParseRealmFoldersAsync(accountFolderPath);
 
-            foreach (var accountFolderPath in accountFolders)
+            return new AccountModel
             {
-                var accountFolderName = Path.GetFileName(accountFolderPath);
-                var realms = await ParseRealmFoldersAsync(accountFolderPath);
-
-                accounts.Add(new AccountModel
-                {
-                    FolderName = accountFolderName,
-                    Realms = realms
-                });
-            }
-
-            return accounts;
+                FolderName = accountFolderName,
+                Realms = realms
+            };
         }
 
         private async Task<ObservableCollection<RealmModel>> ParseRealmFoldersAsync(string path)
         {
-            var realmFolders = await Task.Run(() => Directory.GetDirectories(path));
-            var realms = new List<RealmModel>();
-
-            foreach (var realmPath in realmFolders)
-            {
-                var directoryName = Path.GetFileName(realmPath);
-                
-                if (directoryName.Equals("SavedVariables", StringComparison.OrdinalIgnoreCase))
+            var realmFolders = await Task.Run(() => GetDirectoriesSafe(path));
+            var realms = realmFolders
+                .Where(realmPath => !Path.GetFileName(realmPath).Equals("SavedVariables", StringComparison.OrdinalIgnoreCase))
+                .Select(async realmPath =>
                 {
-                    continue;
-                }
+                    var directoryName = Path.GetFileName(realmPath);
+                    var realmRegion = ExtractRealmRegion(directoryName);
+                    return new RealmModel
+                    {
+                        RealmName = directoryName,
+                        RealmRegion = realmRegion,
+                        Accounts = await ParseAccountsInRealmAsync(realmPath)
+                    };
+                });
 
-                var realmRegion = string.Empty;
-                var parts = directoryName.Split(new[] { '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
-        
-                if (parts.Length >= 2)
-                {
-                    realmRegion = parts[1].Trim();
-                }
-
-                var realm = new RealmModel
-                {
-                    RealmName = directoryName,
-                    RealmRegion = realmRegion,
-                    Accounts = await ParseAccountsInRealmAsync(realmPath)
-                };
-
-                realms.Add(realm);
-            }
-
-            return new ObservableCollection<RealmModel>(realms);
+            return new ObservableCollection<RealmModel>(await Task.WhenAll(realms));
         }
 
+        private string ExtractRealmRegion(string directoryName)
+        {
+            var parts = directoryName.Split(new[] { '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
+            return parts.Length >= 2 ? parts[1].Trim() : string.Empty;
+        }
 
-
+        
         private async Task<ObservableCollection<RealmAccountsModel>> ParseAccountsInRealmAsync(string realmPath)
         {
-            var accountFolders = await Task.Run(() => Directory.GetDirectories(realmPath));
-            var accounts = new List<RealmAccountsModel>();
-
-            foreach (var accountPath in accountFolders)
+            var accountFolders = await Task.Run(() => GetDirectoriesSafe(realmPath));
+            var accounts = accountFolders.Select(accountPath => new RealmAccountsModel
             {
-                var accountName = Path.GetFileName(accountPath);
-                accounts.Add(new RealmAccountsModel
-                {
-                    AccountName = accountName,
-                    ConfigPath = accountPath
-                });
-            }
+                AccountName = Path.GetFileName(accountPath),
+                ConfigPath = accountPath
+            });
 
             return new ObservableCollection<RealmAccountsModel>(accounts);
         }
+
+        
+        private IEnumerable<string> GetDirectoriesSafe(string path)
+        {
+            return Directory.Exists(path) ? Directory.GetDirectories(path) : Array.Empty<string>();
+        }
+
     }
 }

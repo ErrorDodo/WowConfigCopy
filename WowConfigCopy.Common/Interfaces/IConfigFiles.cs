@@ -6,4 +6,5 @@ namespace WowConfigCopy.Common.Interfaces;
 public interface IConfigFiles
 {
     Task<ObservableCollection<AccountModel>> ReadConfigFilesAsync(string wowVersion);
+    Task<ObservableCollection<RealmAccountsModel>> GetRealmsAccounts();
 }
