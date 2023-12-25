@@ -49,7 +49,7 @@
                 CornerRadius="10"
                 Margin="10"
                 Padding="10">
-            <TextBlock Text="Extra stuff here" 
+            <TextBlock Text="File Preview or a Character List/Preview" 
                        FontSize="24" 
                        Foreground="{StaticResource TextBrush}" 
                        Margin="5" 
