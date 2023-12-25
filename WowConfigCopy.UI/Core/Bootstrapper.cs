@@ -33,13 +33,13 @@ public class Bootstrapper : PrismBootstrapper
         containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
         containerRegistry.RegisterSingleton<IWindowService, WindowService>();
 
-        // containerRegistry.Register<RegionsViewModel>();
-        // containerRegistry.Register<SettingsViewModel>();
-        // containerRegistry.Register<RegionDetailsViewModel>();
+        containerRegistry.Register<RegionsViewModel>();
+        containerRegistry.Register<SettingsViewModel>();
+        containerRegistry.Register<RegionDetailsViewModel>();
         
-        containerRegistry.RegisterForNavigation<Regions, RegionsViewModel>();
-        containerRegistry.RegisterForNavigation<Settings, SettingsViewModel>();
-        containerRegistry.RegisterForNavigation<RegionDetails, RegionDetailsViewModel>();
+        // containerRegistry.RegisterForNavigation<Regions, RegionsViewModel>();
+        // containerRegistry.RegisterForNavigation<Settings, SettingsViewModel>();
+        // containerRegistry.RegisterForNavigation<RegionDetails, RegionDetailsViewModel>();
         
         RegisterLogging.Register(containerRegistry);
     }

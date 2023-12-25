@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Prism.Navigation;
 using WowConfigCopy.Common.Models;
 using WowConfigCopy.UI.Dto;
-using WowConfigCopy.UI.Extensions;
 using WowConfigCopy.UI.Interfaces;
 
 namespace WowConfigCopy.UI.ViewModels
@@ -27,13 +26,13 @@ namespace WowConfigCopy.UI.ViewModels
             set => SetProperty(ref _applicationName, value);
         }
 
-        public DebounceCommand ExitCommand { get; private set; }
-        public DebounceCommand SaveCommand { get; private set; }
-        public DebounceCommand GoForwardCommand { get; private set; }
-        public DebounceCommand GoBackwardCommand { get; private set; }
-        public DebounceCommand MinimizeCommand { get; private set; }
-        public DebounceCommand MaximizeCommand { get; private set; }
-        public DebounceCommand<string> NavigateCommand { get; private set; }
+        public DelegateCommand ExitCommand { get; private set; }
+        public DelegateCommand SaveCommand { get; private set; }
+        public DelegateCommand GoForwardCommand { get; private set; }
+        public DelegateCommand GoBackwardCommand { get; private set; }
+        public DelegateCommand MinimizeCommand { get; private set; }
+        public DelegateCommand MaximizeCommand { get; private set; }
+        public DelegateCommand<string> NavigateCommand { get; private set; }
 
         public ShellViewModel(ILogger<ShellViewModel> logger, INavigationService navigationService, IWindowService windowService)
         {
@@ -43,13 +42,13 @@ namespace WowConfigCopy.UI.ViewModels
             
             _navigationService.NavigationStateChanged += OnNavigationStateChanged;
 
-            SaveCommand = new DebounceCommand(SaveSettings);
-            ExitCommand = new DebounceCommand(() => _windowService.CloseWindow());
-            MinimizeCommand = new DebounceCommand(() => _windowService.MinimizeWindow());
-            MaximizeCommand = new DebounceCommand(() => _windowService.MaximizeRestoreWindow());
-            NavigateCommand = new DebounceCommand<string>(Navigate);
-            GoBackwardCommand = new DebounceCommand(_navigationService.GoBackward, _navigationService.CanGoBackward);
-            GoForwardCommand = new DebounceCommand(_navigationService.GoForward, _navigationService.CanGoForward);
+            SaveCommand = new DelegateCommand(SaveSettings);
+            ExitCommand = new DelegateCommand(() => _windowService.CloseWindow());
+            MinimizeCommand = new DelegateCommand(() => _windowService.MinimizeWindow());
+            MaximizeCommand = new DelegateCommand(() => _windowService.MaximizeRestoreWindow());
+            NavigateCommand = new DelegateCommand<string>(Navigate);
+            GoBackwardCommand = new DelegateCommand(_navigationService.GoBackward, () => _navigationService.CanGoBackward());
+            GoForwardCommand = new DelegateCommand(_navigationService.GoForward, () => _navigationService.CanGoForward());
         }
 
         private void Navigate(string viewName)
