@@ -47,7 +47,7 @@ namespace WowConfigCopy.UI.Extensions
 
         public void RaiseCanExecuteChanged()
         {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            _innerCommand.RaiseCanExecuteChanged();
         }
     }
 }
