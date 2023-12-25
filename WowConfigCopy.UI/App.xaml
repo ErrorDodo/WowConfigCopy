@@ -13,6 +13,10 @@
                 <ResourceDictionary Source="/Styles/ContentControl.xaml"/>
                 <ResourceDictionary Source="/Styles/MacButtons.xaml"/>
                 <ResourceDictionary Source="/Styles/ListStyle.xaml"/>
+                <ResourceDictionary Source="/Styles/TextBlock.xaml"/>
+                <ResourceDictionary Source="/Styles/ToggleButton.xaml"/>
+                <ResourceDictionary Source="/Styles/CustomScrollBar.xaml"/>
+                <ResourceDictionary Source="/Styles/Button.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <DataTemplate DataType="{x:Type viewModels:RegionsViewModel}">
                 <views:Regions/>

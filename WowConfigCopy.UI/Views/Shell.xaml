@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:WowConfigCopy.UI.Views"
         xmlns:userControls="clr-namespace:WowConfigCopy.UI.UserControls"
-        Title="Shell" Height="700" Width="950"
+        Title="Shell" Height="750" Width="950"
         WindowStyle="None" Background="{StaticResource BackgroundBrush}" ResizeMode="CanResizeWithGrip" AllowsTransparency="True">
     
     <DockPanel>

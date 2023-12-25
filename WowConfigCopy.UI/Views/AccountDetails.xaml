@@ -5,7 +5,56 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:WowConfigCopy.UI.Views"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <DataTemplate x:Key="ConfigFileModelTemplate">
+            <Border Margin="5" Padding="10" Background="{StaticResource PrimaryButtonBrush}" BorderThickness="1" CornerRadius="8" BorderBrush="{StaticResource AccentBrush}">
+                <StackPanel>
+                    <TextBlock Text="{Binding Name}" Style="{StaticResource HeaderTextBlockStyle}"/>
+                    <Rectangle Height="1" Fill="{StaticResource TextBrush}" Margin="0,5,0,5"/>
+                    <TextBlock Text="{Binding Path}" Style="{StaticResource TooltipLikeTextBlockStyle}"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Edit File" Style="{StaticResource ModernButtonStyle}" />
+                        <Button Content="View File" Style="{StaticResource ModernButtonStyle}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid>
-        <TextBlock Text="{Binding AccountName}" FontSize="24" Foreground="{StaticResource TextBrush}" Margin="5" FontFamily="{StaticResource ZenKakuGothicAntiqueBold}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+        
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
+                   Text="{Binding AccountName}" FontSize="24" Foreground="{StaticResource TextBrush}" 
+                   Margin="5" FontFamily="{StaticResource ZenKakuGothicAntiqueBold}"/>
+        <ListView Grid.Row="1" Grid.Column="0"
+                  ItemsSource="{Binding ConfigFileModel}" 
+                  Style="{StaticResource ModernListViewStyle}" 
+                  ItemTemplate="{StaticResource ConfigFileModelTemplate}">
+            <ListView.Resources>
+                <Style TargetType="ScrollBar" BasedOn="{StaticResource CustomVerticalScrollBarStyle}"/>
+            </ListView.Resources>
+        </ListView>
+        <Border Grid.Row="1" Grid.Column="1"
+                Background="{StaticResource SecondaryButtonBrush}" 
+                BorderBrush="{StaticResource AccentBrush}"
+                BorderThickness="2"
+                CornerRadius="10"
+                Margin="10"
+                Padding="10">
+            <TextBlock Text="Extra stuff here" 
+                       FontSize="24" 
+                       Foreground="{StaticResource TextBrush}" 
+                       Margin="5" 
+                       FontFamily="{StaticResource ZenKakuGothicAntiqueBold}"
+                       TextWrapping="Wrap"/>
+        </Border>
     </Grid>
 </UserControl>

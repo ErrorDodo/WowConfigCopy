@@ -65,19 +65,21 @@ namespace WowConfigCopy.UI.Services
             return realmAccounts;
         }
         
-        public async Task GetConfigFilesAsync(string configPath)
+        public async Task<ObservableCollection<ConfigFileModel>> GetConfigFilesAsync(string configPath)
         {
             var config = await _configFiles.GetConfigFiles(configPath, true);
             if (!config.Any())
             {
                 _logger.LogWarning("No config files found.");
-                return;
+                return new ObservableCollection<ConfigFileModel>();
             }
             
             foreach (var configFile in config)
             {
                 _logger.LogInformation("Config File: {Name}, Path: {Path}, IsGlobal: {IsGlobal}", configFile.Name, configFile.Path, configFile.IsGlobal);
             }
+            
+            return config;
         }
     }
 }

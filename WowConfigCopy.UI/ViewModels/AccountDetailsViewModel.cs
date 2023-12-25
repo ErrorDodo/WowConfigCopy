@@ -29,6 +29,14 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
         get => _realmAccounts;
         set => SetProperty(ref _realmAccounts, value);
     }
+    
+    private ObservableCollection<ConfigFileModel> _configFileModel;
+    
+    public ObservableCollection<ConfigFileModel> ConfigFileModel
+    {
+        get => _configFileModel;
+        set => SetProperty(ref _configFileModel, value);
+    }
 
     public AccountDetailsViewModel(ILogger<AccountDetailsViewModel> logger, IAccountConfigService accountConfigService)
     {
@@ -43,7 +51,7 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
         if (parameters.TryGetValue("accountName", out string accountName))
         {
             _logger.LogInformation($"Received account parameter: {accountName}");
-            AccountName = accountName;
+            AccountName = $"{accountName} - Config Files";
         }
         else
         {
@@ -74,6 +82,6 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
     private async Task GetAllConfigFiles()
     {
         _logger.LogInformation("Getting all config files");
-        await _accountConfigService.GetConfigFilesAsync(_configLocation);
+        ConfigFileModel =  await _accountConfigService.GetConfigFilesAsync(_configLocation);
     }
 }
