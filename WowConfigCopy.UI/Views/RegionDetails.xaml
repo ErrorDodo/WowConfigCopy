@@ -14,7 +14,7 @@
                 </Grid.RowDefinitions>
                 <ToggleButton Grid.Row="0" Content="{Binding AccountName}"
                               Style="{StaticResource ToggleButtonStyle}"
-                              Command="{Binding DataContext.ToggleButtonCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                              Command="{Binding DataContext.ViewAccountDetailsCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                               CommandParameter="{Binding}"
                               IsChecked="{Binding IsExpanded, Mode=TwoWay}"
                               VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
@@ -24,7 +24,7 @@
 
     <Grid>
         <StackPanel Orientation="Vertical">
-            <TextBlock Text="{Binding RegionName}" FontSize="24" Foreground="{StaticResource TextBrush}" Margin="5"/>
+            <TextBlock Text="{Binding RegionName}" FontSize="24" Foreground="{StaticResource TextBrush}" Margin="5" FontFamily="{StaticResource ZenKakuGothicAntiqueBold}"/>
             <ListView ItemsSource="{Binding RealmAccounts}"
                       ItemTemplate="{StaticResource ListViewItemTemplate}"
                       Style="{StaticResource ModernListViewStyle}">

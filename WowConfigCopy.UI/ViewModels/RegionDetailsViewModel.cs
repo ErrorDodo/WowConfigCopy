@@ -14,6 +14,7 @@ namespace WowConfigCopy.UI.ViewModels
     {
         private readonly ILogger<RegionDetailsViewModel> _logger;
         private string _regionName = string.Empty;
+        private readonly ShellViewModel _shellViewModel;
         
         private ObservableCollection<RealmAccountsModel> _realmAccounts;
 
@@ -29,17 +30,19 @@ namespace WowConfigCopy.UI.ViewModels
             set => SetProperty(ref _realmAccounts, value);
         }
         
-        public DelegateCommand<RealmAccountsModel> ToggleButtonCommand { get; }
+        public DelegateCommand<RealmAccountsModel> ViewAccountDetailsCommand { get; }
 
-        public RegionDetailsViewModel(ILogger<RegionDetailsViewModel> logger)
+        public RegionDetailsViewModel(ILogger<RegionDetailsViewModel> logger, ShellViewModel shellViewModel)
         {
             _logger = logger;
-            ToggleButtonCommand = new DelegateCommand<RealmAccountsModel>(ExecuteToggleButtonCommand);
+            _shellViewModel = shellViewModel;
+            ViewAccountDetailsCommand = new DelegateCommand<RealmAccountsModel>(ViewAccountDetails);
         }
         
-        private void ExecuteToggleButtonCommand(RealmAccountsModel model)
+        private void ViewAccountDetails(RealmAccountsModel model)
         {
-            _logger.LogInformation($"Toggling visibility for account {model.AccountName}");
+            _logger.LogInformation($"Moving to account details of account: {model.AccountName}");
+            _shellViewModel.NavigateToAccountDetails(model);
         }
 
         public void InitializeWithParameters(NavigationParameters parameters)

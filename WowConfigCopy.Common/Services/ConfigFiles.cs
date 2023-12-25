@@ -29,21 +29,36 @@ namespace WowConfigCopy.Common.Services
 
             var accountPaths = Path.Combine(wowInstallPath, "WTF", "Account");
             var accountFolders = GetDirectoriesSafe(accountPaths);
+    
+            // Debugging: Log each account folder found
+            var enumerable = accountFolders as string[] ?? accountFolders.ToArray();
+            foreach (var folder in enumerable)
+            {
+                _logger.LogDebug($"Processing account folder: {folder}");
+            }
 
-            var tasks = accountFolders.SelectMany(accountFolder =>
+            var realmAccountTasks = enumerable.SelectMany(accountFolder =>
                 GetDirectoriesSafe(accountFolder)
                     .Where(realmFolder => !Path.GetFileName(realmFolder).Equals("SavedVariables", StringComparison.OrdinalIgnoreCase))
-                    .SelectMany(GetDirectoriesSafe)
                     .Select(ParseAccountsInRealmAsync)).ToList();
 
-            var allResults = await Task.WhenAll(tasks);
+            // Debugging: Log the count of tasks
+            _logger.LogDebug($"Number of tasks created: {realmAccountTasks.Count}");
+
+            var allResults = await Task.WhenAll(realmAccountTasks);
             var realmAccounts = allResults.SelectMany(x => x).ToList();
+
+            // Debugging: Log each realm account found
+            foreach (var account in realmAccounts)
+            {
+                _logger.LogDebug($"Found realm account: {account.AccountName}, Path: {account.ConfigPath}");
+            }
 
             return new ObservableCollection<RealmAccountsModel>(realmAccounts);
         }
 
 
-
+        
         public async Task<ObservableCollection<AccountModel>> ReadConfigFilesAsync(string wowVersion)
         {
             _logger.LogInformation("Reading WoW config files for version: {WowVersion}", wowVersion);

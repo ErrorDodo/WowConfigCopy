@@ -6,6 +6,7 @@
         <Setter Property="Height" Value="12"/>
         <Setter Property="Background" Value="Red"/>
         <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="FontFamily" Value="{StaticResource ZenKakuGothicAntiqueRegular}"/>
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -26,6 +27,7 @@
         <Setter Property="Height" Value="12"/>
         <Setter Property="Background" Value="Yellow"/>
         <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="FontFamily" Value="{StaticResource ZenKakuGothicAntiqueRegular}"/>
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -46,6 +48,7 @@
         <Setter Property="Height" Value="12"/>
         <Setter Property="Background" Value="Green"/>
         <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="FontFamily" Value="{StaticResource ZenKakuGothicAntiqueRegular}"/>
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -66,6 +69,7 @@
         <Setter Property="Height" Value="20"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+        <Setter Property="FontFamily" Value="{StaticResource ZenKakuGothicAntiqueRegular}"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Margin" Value="4"/>
         <Setter Property="Template">

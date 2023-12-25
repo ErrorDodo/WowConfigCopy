@@ -40,8 +40,6 @@ public class ViewModelFactory : IViewModelFactory
                 break;
             case null:
                 throw new ArgumentException($"Failed to resolve the view model {viewModelName}");
-            default:
-                break;
         }
 
         return viewModel;

@@ -31,8 +31,4 @@
       <Resource Include="Resources\ZenKakuGothicAntique-Regular.ttf" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Extensions\" />
-    </ItemGroup>
-
 </Project>

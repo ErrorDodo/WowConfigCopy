@@ -10,6 +10,7 @@
     <Style x:Key="ModernMenuItemStyle" TargetType="{x:Type MenuItem}">
         <Setter Property="Background" Value="{StaticResource SecondaryButtonBrush}"/>
         <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+        <Setter Property="FontFamily" Value="{StaticResource ZenKakuGothicAntiqueRegular}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
         <Setter Property="Padding" Value="10,5"/>

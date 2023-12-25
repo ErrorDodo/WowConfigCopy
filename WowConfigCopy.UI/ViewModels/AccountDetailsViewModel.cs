@@ -13,6 +13,7 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
     private readonly ILogger<AccountDetailsViewModel> _logger;
     private readonly IAccountConfigService _accountConfigService;
     
+    private string _configLocation = string.Empty;
     private string _accountName = string.Empty;
     
     public string AccountName
@@ -42,16 +43,28 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
         if (parameters.TryGetValue("accountName", out string accountName))
         {
             _logger.LogInformation($"Received account parameter: {accountName}");
+            AccountName = accountName;
         }
         else
         {
             _logger.LogWarning("Account parameter not found");
         }
         
-        LoadRealmAccounts().ConfigureAwait(true);
+        if (parameters.TryGetValue("configLocation", out string configLocation))
+        {
+            _logger.LogInformation($"Received config location parameter: {configLocation}");
+            _configLocation = configLocation;
+        }
+        else
+        {
+            _logger.LogWarning("Config location parameter not found");
+        }
+        
+        LoadAllAccounts().ConfigureAwait(true);
     }
     
-    private async Task LoadRealmAccounts()
+    // We get all accounts again so we can copy the config to all accounts or vice versa
+    private async Task LoadAllAccounts()
     {
         _logger.LogInformation("Loading realm accounts");
         RealmAccounts = await _accountConfigService.GetRealmsAccountsAsync();

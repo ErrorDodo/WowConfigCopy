@@ -13,9 +13,9 @@
                                FontWeight="Bold" 
                                Margin="5">
                         <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseUp">
+                            <i:EventTrigger EventName="PreviewMouseUp">
                                 <i:InvokeCommandAction Command="{Binding DataContext.NavigateToRegionDetailsCommand, 
-                                                RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                        RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
                                                        CommandParameter="{Binding}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>

@@ -21,6 +21,7 @@ namespace WowConfigCopy.UI.Services
         
         public async Task<ObservableCollection<AccountModel>> ReadConfigAsync()
         {
+            _logger.LogInformation("Reading WoW config files & getting account information");
             var wowVersion = "SoD";
             var accounts = await _configFiles.ReadConfigFilesAsync(wowVersion);
 
@@ -32,13 +33,11 @@ namespace WowConfigCopy.UI.Services
             
             foreach (var account in accounts)
             {
-                _logger.LogInformation("Account: {Account}", account.FolderName);
                 foreach (var realm in account.Realms)
                 {
-                    _logger.LogInformation("Realm: {Realm}", realm.RealmName);
                     foreach (var character in realm.Accounts)
                     {
-                        _logger.LogInformation("Character: {Character}", character.AccountName);
+                        _logger.LogInformation("Character: {Character}, Config Path: {Config}, Realm: {Realm}", character.AccountName, character.ConfigPath, realm.RealmName);
                     }
                 }
             }
@@ -55,11 +54,12 @@ namespace WowConfigCopy.UI.Services
                 _logger.LogWarning("No realm accounts found.");
                 return new ObservableCollection<RealmAccountsModel>();
             }
-            
+            var counter = 0;
             foreach (var realmAccount in realmAccounts)
             {
-                _logger.LogInformation("Realm Account: {AccountName}, Config Path: {ConfigPath}", 
-                    realmAccount.AccountName, realmAccount.ConfigPath);
+                counter++;
+                _logger.LogInformation("Realm Account: {AccountName}, Config Path: {ConfigPath}, Counter: {Counter}", 
+                    realmAccount.AccountName, realmAccount.ConfigPath, counter);
             }
 
             return realmAccounts;
