@@ -57,6 +57,24 @@ namespace WowConfigCopy.Common.Services
             return new ObservableCollection<RealmAccountsModel>(realmAccounts);
         }
 
+        public async Task<ObservableCollection<ConfigFileModel>> GetConfigFiles(string configPath, bool getAccountConfigFiles = false)
+        {
+            _logger.LogInformation($"Retrieving Config Files for {configPath}");
+
+            var files = GetFilesSafe(configPath);
+
+            var allFiles = (from file in files where !file.EndsWith(".old", StringComparison.OrdinalIgnoreCase) select new ConfigFileModel {Name = Path.GetFileName(file), Path = file, IsGlobal = false}).ToList();
+
+            if (!getAccountConfigFiles) return new ObservableCollection<ConfigFileModel>(allFiles);
+            var accountDirectory = Directory.GetParent(Directory.GetParent(configPath).FullName).FullName;
+            _logger.LogInformation($"Retrieving Account Config Files for {accountDirectory}");
+
+            var accountFiles = GetFilesSafe(accountDirectory);
+            allFiles.AddRange(from file in accountFiles where !file.EndsWith(".old", StringComparison.OrdinalIgnoreCase) select new ConfigFileModel {Name = Path.GetFileName(file), Path = file, IsGlobal = true});
+
+            return new ObservableCollection<ConfigFileModel>(allFiles);
+        }
+
 
         
         public async Task<ObservableCollection<AccountModel>> ReadConfigFilesAsync(string wowVersion)
@@ -141,6 +159,10 @@ namespace WowConfigCopy.Common.Services
         {
             return Directory.Exists(path) ? Directory.GetDirectories(path) : Array.Empty<string>();
         }
-
+        
+        private IEnumerable<string> GetFilesSafe(string path)
+        {
+            return Directory.Exists(path) ? Directory.GetFiles(path) : Array.Empty<string>();
+        }
     }
 }

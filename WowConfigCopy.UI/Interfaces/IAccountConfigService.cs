@@ -8,4 +8,5 @@ public interface IAccountConfigService
 {
     Task<ObservableCollection<AccountModel>> ReadConfigAsync();
     Task<ObservableCollection<RealmAccountsModel>> GetRealmsAccountsAsync();
+    Task GetConfigFilesAsync(string configPath);
 }

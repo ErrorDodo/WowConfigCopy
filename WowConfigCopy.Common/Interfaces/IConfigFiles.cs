@@ -7,4 +7,5 @@ public interface IConfigFiles
 {
     Task<ObservableCollection<AccountModel>> ReadConfigFilesAsync(string wowVersion);
     Task<ObservableCollection<RealmAccountsModel>> GetRealmsAccounts();
+    Task<ObservableCollection<ConfigFileModel>> GetConfigFiles(string configPath, bool getAccountConfigFiles = false);
 }

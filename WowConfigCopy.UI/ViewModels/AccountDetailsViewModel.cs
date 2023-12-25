@@ -61,6 +61,7 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
         }
         
         LoadAllAccounts().ConfigureAwait(true);
+        GetAllConfigFiles().ConfigureAwait(true);
     }
     
     // We get all accounts again so we can copy the config to all accounts or vice versa
@@ -68,5 +69,11 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
     {
         _logger.LogInformation("Loading realm accounts");
         RealmAccounts = await _accountConfigService.GetRealmsAccountsAsync();
+    }
+    
+    private async Task GetAllConfigFiles()
+    {
+        _logger.LogInformation("Getting all config files");
+        await _accountConfigService.GetConfigFilesAsync(_configLocation);
     }
 }
