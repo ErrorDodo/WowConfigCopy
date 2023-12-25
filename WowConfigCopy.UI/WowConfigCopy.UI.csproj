@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\WowConfigCopy.Api\WowConfigCopy.Api.csproj" />
       <ProjectReference Include="..\WowConfigCopy.Common\WowConfigCopy.Common.csproj" />
     </ItemGroup>
 
@@ -29,10 +30,6 @@
       <Resource Include="Resources\ZenKakuGothicAntique-Medium.ttf" />
       <None Remove="Resources\ZenKakuGothicAntique-Regular.ttf" />
       <Resource Include="Resources\ZenKakuGothicAntique-Regular.ttf" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Extensions\" />
     </ItemGroup>
 
 </Project>

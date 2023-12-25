@@ -2,8 +2,11 @@ using System.Windows;
 using Prism.Ioc;
 using Prism.Unity;
 using Unity;
+using WowConfigCopy.Api.Extensions;
+using WowConfigCopy.Common.Extensions;
 using WowConfigCopy.Common.Interfaces;
 using WowConfigCopy.Common.Services;
+using WowConfigCopy.UI.Extensions;
 using WowConfigCopy.UI.Interfaces;
 using WowConfigCopy.UI.Services;
 using WowConfigCopy.UI.ViewModels;
@@ -26,21 +29,10 @@ public class Bootstrapper : PrismBootstrapper
     
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
-        containerRegistry.RegisterSingleton<IConfigFiles, ConfigFiles>();
-        containerRegistry.RegisterSingleton<IRegistryHelper, RegistryHelper>();
-        containerRegistry.RegisterSingleton<IAccountConfigService, AccountConfigService>();
-        containerRegistry.RegisterSingleton<IViewModelFactory, ViewModelFactory>();
-        containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
-        containerRegistry.RegisterSingleton<IWindowService, WindowService>();
-
-        containerRegistry.Register<RegionsViewModel>();
-        containerRegistry.Register<SettingsViewModel>();
-        containerRegistry.Register<RegionDetailsViewModel>();
-        
-        // containerRegistry.RegisterForNavigation<Regions, RegionsViewModel>();
-        // containerRegistry.RegisterForNavigation<Settings, SettingsViewModel>();
-        // containerRegistry.RegisterForNavigation<RegionDetails, RegionDetailsViewModel>();
-        
         RegisterLogging.Register(containerRegistry);
+        containerRegistry.RegisterUiViews();
+        containerRegistry.RegisterUiServices();
+        containerRegistry.RegisterApiServices();
+        containerRegistry.RegisterCommonServices();
     }
 }

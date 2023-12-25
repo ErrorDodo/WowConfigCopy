@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Prism.Ioc;
 
-namespace WowConfigCopy.UI.Core
+namespace WowConfigCopy.UI.Extensions
 {
     public static class RegisterLogging
     {
@@ -13,7 +13,7 @@ namespace WowConfigCopy.UI.Core
                 builder.AddDebug();
             });
 
-            containerRegistry.RegisterInstance<ILoggerFactory>(loggerFactory);
+            containerRegistry.RegisterInstance(loggerFactory);
             containerRegistry.Register(typeof(ILogger<>), typeof(Logger<>));
         }
     }
