@@ -1,15 +1,7 @@
 using System.Windows;
 using Prism.Ioc;
 using Prism.Unity;
-using Unity;
-using WowConfigCopy.Api.Extensions;
-using WowConfigCopy.Common.Extensions;
-using WowConfigCopy.Common.Interfaces;
-using WowConfigCopy.Common.Services;
 using WowConfigCopy.UI.Extensions;
-using WowConfigCopy.UI.Interfaces;
-using WowConfigCopy.UI.Services;
-using WowConfigCopy.UI.ViewModels;
 using WowConfigCopy.UI.Views;
 
 namespace WowConfigCopy.UI.Core;

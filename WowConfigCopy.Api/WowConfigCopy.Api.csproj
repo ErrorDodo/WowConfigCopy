@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Extensions\" />
       <Folder Include="Models\" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
-      <PackageReference Include="Prism.Container.Extensions" Version="8.0.62" />
     </ItemGroup>
 
 </Project>

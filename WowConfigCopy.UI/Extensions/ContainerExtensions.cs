@@ -1,4 +1,9 @@
 using Prism.Ioc;
+using WowConfigCopy.Api.Core;
+using WowConfigCopy.Api.Interfaces;
+using WowConfigCopy.Api.Services;
+using WowConfigCopy.Common.Interfaces;
+using WowConfigCopy.Common.Services;
 using WowConfigCopy.UI.Core;
 using WowConfigCopy.UI.Interfaces;
 using WowConfigCopy.UI.Services;
@@ -23,5 +28,17 @@ public static class ContainerExtensions
         containerRegistry.Register<RegionsViewModel>();
         containerRegistry.Register<SettingsViewModel>();
         containerRegistry.Register<RegionDetailsViewModel>();
+    }
+    
+    public static void RegisterApiServices(this IContainerRegistry containerRegistry)
+    {
+        containerRegistry.RegisterSingleton<BlizzardApiClientFactory>();
+        containerRegistry.RegisterSingleton<IGenericApiService, GenericApiService>();
+    }
+    
+    public static void RegisterCommonServices(this IContainerRegistry containerRegistry)
+    {
+        containerRegistry.RegisterSingleton<IConfigFiles, ConfigFiles>();
+        containerRegistry.RegisterSingleton<IRegistryHelper, RegistryHelper>();
     }
 }
