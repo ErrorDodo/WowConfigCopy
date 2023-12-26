@@ -42,5 +42,12 @@
                 VerticalAlignment="Bottom"
                 Margin="10"
                 Command="{Binding SaveFileCommand}"/>
+        
+        <TextBlock Grid.Row="2"
+                   Text="{Binding StatusMessage}"
+                   Visibility="{Binding StatusVisibility}"
+                   Foreground="{Binding StatusColour}"
+                   Margin="10"
+                   HorizontalAlignment="Center"/>
     </Grid>
 </UserControl>

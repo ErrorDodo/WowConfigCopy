@@ -1,8 +1,11 @@
+using System.Threading.Tasks;
+using System.Windows;
 using ICSharpCode.AvalonEdit.Highlighting;
 using Microsoft.Extensions.Logging;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
+using WowConfigCopy.Common.Models;
 using WowConfigCopy.UI.Interfaces;
 
 namespace WowConfigCopy.UI.ViewModels;
@@ -14,7 +17,31 @@ public class EditFileViewModel : BindableBase, IInitializeWithParameters
     
     private string _fileName = string.Empty;
     private string _fileContents;
+    private string _fileLocation;
+    private string _originalFileContents;
     private IHighlightingDefinition _syntaxHighlighting;
+    private string _statusMessage;
+    private Visibility _statusVisibility = Visibility.Collapsed;
+    private string _statusColour;
+    
+    public string StatusColour
+    {
+        get => _statusColour;
+        set => SetProperty(ref _statusColour, value);
+    }
+
+    public string StatusMessage
+    {
+        get => _statusMessage;
+        set => SetProperty(ref _statusMessage, value);
+    }
+
+    public Visibility StatusVisibility
+    {
+        get => _statusVisibility;
+        set => SetProperty(ref _statusVisibility, value);
+    }
+
     
     public string FileName
     {
@@ -40,7 +67,7 @@ public class EditFileViewModel : BindableBase, IInitializeWithParameters
     {
         _logger = logger;
         _fileService = fileService;
-        SaveFileCommand = new DelegateCommand(() => SaveFile(_fileName));
+        SaveFileCommand = new DelegateCommand(SaveFile);
     }
     
     public void InitializeWithParameters(NavigationParameters parameters)
@@ -50,6 +77,7 @@ public class EditFileViewModel : BindableBase, IInitializeWithParameters
         if (parameters.TryGetValue("fileLocation", out string configLocation))
         {
             _logger.LogInformation($"Config location: {configLocation}");
+            _fileLocation = configLocation;
         }
         
         if (parameters.TryGetValue("fileName", out string fileName))
@@ -64,13 +92,36 @@ public class EditFileViewModel : BindableBase, IInitializeWithParameters
     private async void LoadFile(string filePath)
     {
         FileContents = await _fileService.ViewFileContents(filePath);
+        _originalFileContents = FileContents;
         DetermineSyntaxHighlighting(filePath);
     }
-    
-    public async void SaveFile(string filePath)
+
+    private async void SaveFile()
     {
-        await _fileService.SaveFileContents(filePath, FileContents);
+        if (!HasFileChanged())
+        {
+            _logger.LogInformation("File has not changed, no need to save.");
+            StatusMessage = "File has not changed, no need to save.";
+            StatusVisibility = Visibility.Visible;
+            StatusColour = "#FF0000";
+            return;
+        }
+        await _fileService.SaveFileContents(_fileLocation, FileContents);
+        _originalFileContents = FileContents;
+        
+        StatusMessage = "File saved successfully!";
+        StatusVisibility = Visibility.Visible;
+        StatusColour = "#00FF00";
+        
+        await Task.Delay(2000);
+        StatusVisibility = Visibility.Collapsed;
     }
+    
+    private bool HasFileChanged()
+    {
+        return FileContents != _originalFileContents;
+    }
+
     
     private void DetermineSyntaxHighlighting(string filePath)
     {

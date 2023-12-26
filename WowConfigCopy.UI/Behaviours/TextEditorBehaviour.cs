@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Windows;
 using ICSharpCode.AvalonEdit;
 
@@ -27,12 +26,26 @@ namespace WowConfigCopy.UI.Behaviours
             textEditor.SetValue(TextProperty, value);
         }
 
+        private static void AttachTextChangedEventHandler(TextEditor textEditor)
+        {
+            textEditor.TextChanged += (sender, args) =>
+            {
+                SetText(textEditor, textEditor.Text);
+            };
+        }
+
         private static void TextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var textEditor = (TextEditor)d;
             if (textEditor.Document == null) return;
+
             var newText = (string)e.NewValue ?? string.Empty;
-            textEditor.Document.Text = newText;
+            if (textEditor.Document.Text != newText)
+            {
+                textEditor.Document.Text = newText;
+            }
+            
+            AttachTextChangedEventHandler(textEditor);
         }
 
 

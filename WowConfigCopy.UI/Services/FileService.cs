@@ -70,13 +70,13 @@ public class FileService : IFileService
 
         try
         {
-            _logger.LogInformation($"Writing file contents for {filePath}");
+            _logger.LogInformation($"Attempting to write to file: {filePath}");
             await File.WriteAllTextAsync(filePath, content);
+            _logger.LogInformation($"Successfully wrote to file: {filePath}");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error occurred while writing file contents: {filePath}");
+            _logger.LogError(ex, $"Error occurred while writing to file: {filePath}");
         }
     }
-
 }
