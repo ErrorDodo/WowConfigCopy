@@ -48,7 +48,7 @@
                   Style="{StaticResource ModernListViewStyle}" 
                   ItemTemplate="{StaticResource ConfigFileModelTemplate}">
             <ListView.Resources>
-                <Style TargetType="ScrollBar" BasedOn="{StaticResource CustomVerticalScrollBarStyle}"/>
+                <!-- <Style TargetType="ScrollBar" BasedOn="{StaticResource CustomVerticalScrollBarStyle}"/> -->
             </ListView.Resources>
         </ListView>
         <Border Grid.Row="1" Grid.Column="1"

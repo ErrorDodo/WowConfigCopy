@@ -14,6 +14,7 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
     private readonly ILogger<AccountDetailsViewModel> _logger;
     private readonly IAccountConfigService _accountConfigService;
     private readonly IFileService _fileService;
+    private readonly ShellViewModel _shellViewModel;
     
     private string _configLocation = string.Empty;
     private string _accountName = string.Empty;
@@ -43,11 +44,12 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
     public DelegateCommand<ConfigFileModel> EditFileCommand { get; set; }
     public DelegateCommand<ConfigFileModel> ViewFileCommand { get; set; }
 
-    public AccountDetailsViewModel(ILogger<AccountDetailsViewModel> logger, IAccountConfigService accountConfigService, IFileService fileService)
+    public AccountDetailsViewModel(ILogger<AccountDetailsViewModel> logger, IAccountConfigService accountConfigService, IFileService fileService, ShellViewModel shellViewModel)
     {
         _logger = logger;
         _accountConfigService = accountConfigService;
         _fileService = fileService;
+        _shellViewModel = shellViewModel;
 
         EditFileCommand = new DelegateCommand<ConfigFileModel>(EditFile);
         ViewFileCommand = new DelegateCommand<ConfigFileModel>(ViewFile);
@@ -56,6 +58,7 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
     private void EditFile(ConfigFileModel model)
     {
         _logger.LogInformation($"Edit file command called for file: {model.Name}");
+        _shellViewModel.NavigateToEditFile(model);
     }
     
     private void ViewFile(ConfigFileModel model)

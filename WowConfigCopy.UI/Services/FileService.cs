@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using WowConfigCopy.UI.Interfaces;
 
@@ -12,11 +14,6 @@ public class FileService : IFileService
     public FileService(ILogger<FileService> logger)
     {
         _logger = logger;
-    }
-    
-    public void EditFile(string filePath)
-    {
-        _logger.LogInformation($"Edit file command called for file: {filePath}");
     }
     
     public void ViewFile(string filePath)
@@ -40,6 +37,45 @@ public class FileService : IFileService
         catch (Exception ex)
         {
             _logger.LogError(ex, $"Error occurred while opening file: {filePath}");
+        }
+    }
+
+    public async Task<string> ViewFileContents(string filePath)
+    {
+        if (string.IsNullOrEmpty(filePath))
+        {
+            _logger.LogWarning("ViewFileContents called with a null or empty filePath.");
+            return string.Empty;
+        }
+
+        try
+        {
+            _logger.LogInformation($"Reading file contents for {filePath}");
+            return await File.ReadAllTextAsync(filePath);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error occurred while reading file contents: {filePath}");
+            return string.Empty;
+        }
+    }
+    
+    public async Task SaveFileContents(string filePath, string content)
+    {
+        if (string.IsNullOrEmpty(filePath))
+        {
+            _logger.LogWarning("SaveFileContents called with a null or empty filePath.");
+            return;
+        }
+
+        try
+        {
+            _logger.LogInformation($"Writing file contents for {filePath}");
+            await File.WriteAllTextAsync(filePath, content);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error occurred while writing file contents: {filePath}");
         }
     }
 

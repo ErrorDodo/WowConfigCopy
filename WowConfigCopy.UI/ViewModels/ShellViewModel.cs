@@ -77,6 +77,16 @@ namespace WowConfigCopy.UI.ViewModels
             };
             _navigationService.NavigateTo("AccountDetails", parameters);
         }
+        
+        public void NavigateToEditFile(ConfigFileModel fileDetails)
+        {
+            var parameters = new NavigationParameters
+            {
+                { "fileLocation", fileDetails.Path },
+                { "fileName", fileDetails.Name }
+            };
+            _navigationService.NavigateTo("EditFile", parameters);
+        }
 
         private void OnNavigationStateChanged()
         {
