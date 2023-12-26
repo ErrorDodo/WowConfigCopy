@@ -41,6 +41,7 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 Margin="10"
+                Style="{StaticResource ModernButtonStyle}"
                 Command="{Binding SaveFileCommand}"/>
         
         <TextBlock Grid.Row="2"
