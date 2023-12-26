@@ -5,6 +5,13 @@
     <UserControl.Resources>
         <DataTemplate x:Key="ModernListViewItemTemplate">
             <Border Background="{StaticResource PrimaryButtonBrush}" CornerRadius="8">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseUp">
+                        <i:InvokeCommandAction Command="{Binding DataContext.NavigateToRegionDetailsCommand, 
+                                        RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                               CommandParameter="{Binding}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock Text="{Binding RealmName}" 
                                Foreground="{StaticResource TextBrush}" 
@@ -12,13 +19,6 @@
                                FontSize="16" 
                                FontWeight="Bold" 
                                Margin="5">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="PreviewMouseUp">
-                                <i:InvokeCommandAction Command="{Binding DataContext.NavigateToRegionDetailsCommand, 
-                                        RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
-                                                       CommandParameter="{Binding}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
                     </TextBlock>
                 </StackPanel>
             </Border>
