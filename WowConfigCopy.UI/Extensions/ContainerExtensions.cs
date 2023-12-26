@@ -19,8 +19,7 @@ public static class ContainerExtensions
         containerRegistry.RegisterSingleton<IViewModelFactory, ViewModelFactory>();
         containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
         containerRegistry.RegisterSingleton<IWindowService, WindowService>();
-
-
+        containerRegistry.RegisterSingleton<IFileService, FileService>();
     }
     
     public static void RegisterUiViews(this IContainerRegistry containerRegistry)

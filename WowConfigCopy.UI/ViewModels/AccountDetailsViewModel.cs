@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using WowConfigCopy.Common.Models;
@@ -12,6 +13,7 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
 {
     private readonly ILogger<AccountDetailsViewModel> _logger;
     private readonly IAccountConfigService _accountConfigService;
+    private readonly IFileService _fileService;
     
     private string _configLocation = string.Empty;
     private string _accountName = string.Empty;
@@ -37,11 +39,28 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
         get => _configFileModel;
         set => SetProperty(ref _configFileModel, value);
     }
+    
+    public DelegateCommand<ConfigFileModel> EditFileCommand { get; set; }
+    public DelegateCommand<ConfigFileModel> ViewFileCommand { get; set; }
 
-    public AccountDetailsViewModel(ILogger<AccountDetailsViewModel> logger, IAccountConfigService accountConfigService)
+    public AccountDetailsViewModel(ILogger<AccountDetailsViewModel> logger, IAccountConfigService accountConfigService, IFileService fileService)
     {
         _logger = logger;
         _accountConfigService = accountConfigService;
+        _fileService = fileService;
+
+        EditFileCommand = new DelegateCommand<ConfigFileModel>(EditFile);
+        ViewFileCommand = new DelegateCommand<ConfigFileModel>(ViewFile);
+    }
+    
+    private void EditFile(ConfigFileModel model)
+    {
+        _logger.LogInformation($"Edit file command called for file: {model.Name}");
+    }
+    
+    private void ViewFile(ConfigFileModel model)
+    {
+        _fileService.ViewFile(model.Path);
     }
 
     public void InitializeWithParameters(NavigationParameters parameters)
