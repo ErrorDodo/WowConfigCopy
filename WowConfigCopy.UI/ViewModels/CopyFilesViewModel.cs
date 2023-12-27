@@ -1,5 +1,10 @@
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 using Microsoft.Extensions.Logging;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using WowConfigCopy.Common.Interfaces;
@@ -12,9 +17,46 @@ public class CopyFilesViewModel : BindableBase, IInitializeWithParameters
 {
     private readonly ILogger<CopyFilesViewModel> _logger;
     private readonly IConfigFiles _configFiles;
+    private readonly IConfigCopy _configCopy;
+    private readonly IProcessViewer _processViewer;
 
     private string _accountName;
     private string _sourceConfigLocation;
+    private Visibility _copyButtonVisibility = Visibility.Collapsed;
+    private Visibility _progressBarVisibility = Visibility.Collapsed;
+    private int _progressBarValue;
+    private string _currentLog;
+    private bool _isOperationInProgress;
+    
+    public string CurrentLog
+    {
+        get => _currentLog;
+        set => SetProperty(ref _currentLog, value);
+    }
+
+    public bool IsOperationInProgress
+    {
+        get => _isOperationInProgress;
+        set => SetProperty(ref _isOperationInProgress, value);
+    }
+    
+    public int ProgressBarValue
+    {
+        get => _progressBarValue;
+        set => SetProperty(ref _progressBarValue, value);
+    }
+    
+    public Visibility ProgressBarVisibility
+    {
+        get => _progressBarVisibility;
+        set => SetProperty(ref _progressBarVisibility, value);
+    }
+    
+    public Visibility CopyButtonVisibility
+    {
+        get => _copyButtonVisibility;
+        set => SetProperty(ref _copyButtonVisibility, value);
+    }
     
     public string AccountName
     {
@@ -38,6 +80,8 @@ public class CopyFilesViewModel : BindableBase, IInitializeWithParameters
             if (SetProperty(ref _selectedAccount, value))
             {
                 LogSelectedAccountInfo();
+                CopyButtonVisibility = value != null ? Visibility.Visible : Visibility.Collapsed;
+                ProgressBarVisibility = Visibility.Collapsed;
             }
         }
     }
@@ -50,18 +94,57 @@ public class CopyFilesViewModel : BindableBase, IInitializeWithParameters
             _logger.LogInformation($"Config location: {_selectedAccount.ConfigPath}");
         }
     }
+    
+    public DelegateCommand StartCopyCommand { get; set; }
 
-    public CopyFilesViewModel(ILogger<CopyFilesViewModel> logger, IConfigFiles configFiles)
+    public CopyFilesViewModel(ILogger<CopyFilesViewModel> logger, IConfigFiles configFiles, IConfigCopy configCopy, IProcessViewer processViewer)
     {
         _logger = logger;
         _configFiles = configFiles;
+        _configCopy = configCopy;
+        _processViewer = processViewer;
+        StartCopyCommand = new DelegateCommand(async () => await StartCopy());
+        
         LoadAccounts();
+        SubscribeToEvents();
+    }
+
+    private void SubscribeToEvents()
+    {
+        _configCopy.FileCopying += OnFileCopying;
+        _configCopy.ProgressChanged += OnProgressChanged;
+    }
+    
+    private void OnFileCopying(object? sender, string fileName)
+    {
+        CurrentLog += $"\nCopied file: {fileName}";
+    }
+    
+    private void OnProgressChanged(object? sender, int progress)
+    {
+        ProgressBarValue = progress;
     }
 
     private async void LoadAccounts()
     {
         var accounts = await _configFiles.GetRealmsAccounts();
+        accounts.Remove(accounts.FirstOrDefault(x => x.AccountName.Equals(AccountName)));
         Accounts = new ObservableCollection<RealmAccountsModel>(accounts);
+    }
+
+    private async Task StartCopy()
+    {
+        IsOperationInProgress = true;
+        ProgressBarVisibility = Visibility.Visible;
+        CopyButtonVisibility = Visibility.Collapsed;
+        
+        // This is the first run
+        _configCopy.CopyConfigFiles(SelectedAccount.ConfigPath, _sourceConfigLocation);
+        
+        // This is the second run
+        _configCopy.CopyConfigFiles(_sourceConfigLocation, SelectedAccount.ConfigPath, false);
+
+        IsOperationInProgress = false;
     }
     
     public void InitializeWithParameters(NavigationParameters parameters)
