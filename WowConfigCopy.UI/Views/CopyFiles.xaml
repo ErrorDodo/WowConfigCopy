@@ -12,7 +12,9 @@
     <Grid>
         <TextBlock Text="{Binding AccountName}" FontSize="24" Foreground="{StaticResource TextBrush}" 
                    Margin="5" FontFamily="{StaticResource ZenKakuGothicAntiqueBold}"/>
+
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        
             <StackPanel Orientation="Vertical" Margin="5">
                 <TextBlock Text="Copy From" FontSize="16" Foreground="{StaticResource TextBrush}" 
                            FontFamily="{StaticResource ZenKakuGothicAntiqueRegular}" VerticalAlignment="Center"/>
@@ -25,14 +27,19 @@
                           Margin="5,0,0,0"
                           Width="200"/>
             </StackPanel>
+
             <StackPanel Margin="10">
                 <Button Content="Copy Files" Command="{Binding StartCopyCommand}"
                         Visibility="{Binding CopyButtonVisibility}"
                         Style="{StaticResource ModernButtonStyle}"/>
                 <ProgressBar Value="{Binding ProgressBarValue}" Margin="5" Visibility="{Binding ProgressBarVisibility}" Style="{StaticResource ModernProgressBarStyle}" Height="30"/>
-                <TextBlock Text="{Binding CurrentLog}" FontSize="16" Foreground="{StaticResource TextBrush}" 
-                           Margin="5" FontFamily="{StaticResource ZenKakuGothicAntiqueRegular}"/>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Height="100" Margin="5">
+                    <TextBlock Text="{Binding CurrentLog}" FontSize="16" Foreground="{StaticResource TextBrush}" 
+                               FontFamily="{StaticResource ZenKakuGothicAntiqueRegular}" TextWrapping="Wrap"/>
+                </ScrollViewer>
             </StackPanel>
+
         </StackPanel>
     </Grid>
+
 </UserControl>

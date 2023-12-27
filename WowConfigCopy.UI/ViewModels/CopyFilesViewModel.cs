@@ -139,14 +139,14 @@ public class CopyFilesViewModel : BindableBase, IInitializeWithParameters
         CopyButtonVisibility = Visibility.Collapsed;
 
         await ProcessHelper.EnsureWoWIsClosed(_processViewer);
-        _configCopy.CopyConfigFiles(SelectedAccount.ConfigPath, _sourceConfigLocation);
+        _configCopy.CopyConfigFiles(SelectedAccount.ConfigPath, _sourceConfigLocation, true, true);
 
         await ProcessHelper.PromptToStartWoW(_processViewer);
     
         MessageBox.Show("Please close World of Warcraft to proceed with the next step.", "Notification", MessageBoxButton.OK);
     
         await ProcessHelper.EnsureWoWIsClosed(_processViewer);
-        _configCopy.CopyConfigFiles(_sourceConfigLocation, SelectedAccount.ConfigPath, false);
+        _configCopy.CopyConfigFiles(SelectedAccount.ConfigPath, _sourceConfigLocation, false);
 
         IsOperationInProgress = false;
         ProgressBarVisibility = Visibility.Collapsed;
