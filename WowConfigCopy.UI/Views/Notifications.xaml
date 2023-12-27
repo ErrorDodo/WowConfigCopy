@@ -1,0 +1,13 @@
+<Window x:Class="WowConfigCopy.UI.Views.Notifications"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:WowConfigCopy.UI.Views"
+        mc:Ignorable="d"
+        Title="Notifications" Height="450" Width="800"
+        WindowStyle="None" Background="{StaticResource BackgroundBrush}" ResizeMode="NoResize" AllowsTransparency="True" Topmost="True">
+    <Grid>
+        <TextBlock Text="{Binding Message}" Style="{StaticResource HeaderTextBlockStyle}"/>
+    </Grid>
+</Window>

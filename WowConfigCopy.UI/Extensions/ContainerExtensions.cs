@@ -20,7 +20,7 @@ public static class ContainerExtensions
         containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
         containerRegistry.RegisterSingleton<IWindowService, WindowService>();
         containerRegistry.RegisterSingleton<IFileService, FileService>();
-        containerRegistry.RegisterSingleton<INotificationService, NotficationService>();
+        containerRegistry.RegisterSingleton<INotificationService, NotificationService>();
         containerRegistry.RegisterSingleton<IBackupService, BackupService>();
         containerRegistry.RegisterSingleton<ISettingsService, SettingsService>();
     }
