@@ -4,6 +4,8 @@ using WowConfigCopy.Common.Helpers;
 using WowConfigCopy.Common.Interfaces;
 using WowConfigCopy.Common.Models;
 
+namespace WowConfigCopy.Common.Services;
+
 public class BackupService : IBackupService
 {
     private readonly ILogger<BackupService> _logger;
@@ -30,6 +32,7 @@ public class BackupService : IBackupService
 
     public void ExtractBackup(string accountName)
     {
+        // TODO: Update this function to handle more than one backup file, this will most likely entail a new UI for selecting which backup to restore
         var backupFile = Path.Combine(_backupFolder, $"{accountName} - Backup.zip");
         if (!File.Exists(backupFile))
         {
@@ -43,8 +46,16 @@ public class BackupService : IBackupService
 
     public void BackupFile(string accountName, string configPath)
     {
-        var backupFile = Path.Combine(_backupFolder, $"{accountName} - Backup.zip");
-        DeleteExistingBackupFile(backupFile);
+        var lastBackupFile = FindLatestBackup(accountName);
+        if (lastBackupFile != null && (DateTime.Now - lastBackupFile.CreationTime).TotalMinutes < 5)
+        {
+            _logger.LogInformation($"A recent backup for {accountName} already exists. Skipping new backup.");
+            return;
+        }
+
+        var timestamp = DateTime.Now.ToString("yyyyMMdd-HHmmss");
+        var backupFileName = $"{accountName} {timestamp}.zip";
+        var backupFile = Path.Combine(_backupFolder, backupFileName);
 
         var filesToBackup = GetFilesToBackup(configPath);
         var configFileModels = filesToBackup as ConfigFileModel[] ?? filesToBackup.ToArray();
@@ -55,7 +66,19 @@ public class BackupService : IBackupService
 
         DeleteCopiedFiles(configFileModels);
     }
+    
+    public bool HasRecentBackup(string accountName)
+    {
+        var lastBackupFile = FindLatestBackup(accountName);
+        return lastBackupFile != null && (DateTime.Now - lastBackupFile.CreationTime).TotalMinutes < 5;
+    }
 
+    private FileInfo? FindLatestBackup(string accountName)
+    {
+        var directoryInfo = new DirectoryInfo(_backupFolder);
+        return directoryInfo.GetFiles($"{accountName} *.zip").MaxBy(f => f.CreationTime);
+    }
+    
     private void CreateZipFile(string backupFile, IEnumerable<ConfigFileModel> configFileModels)
     {
         using var zipFileStream = new FileStream(backupFile, FileMode.Create);
@@ -82,7 +105,7 @@ public class BackupService : IBackupService
     {
         var files = _fileHelpers.GetFilesSafe(configPath);
         return files.Where(file => !file.EndsWith(".old", StringComparison.OrdinalIgnoreCase))
-                    .Select(file => new ConfigFileModel { Name = Path.GetFileName(file), Path = file, IsGlobal = false });
+            .Select(file => new ConfigFileModel { Name = Path.GetFileName(file), Path = file, IsGlobal = false });
     }
 
     private void CopyFilesToBackupFolder(IEnumerable<ConfigFileModel> filesToBackup)
