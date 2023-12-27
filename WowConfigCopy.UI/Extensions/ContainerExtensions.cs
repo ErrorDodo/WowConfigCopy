@@ -22,6 +22,7 @@ public static class ContainerExtensions
         containerRegistry.RegisterSingleton<IFileService, FileService>();
         containerRegistry.RegisterSingleton<INotificationService, NotficationService>();
         containerRegistry.RegisterSingleton<IBackupService, BackupService>();
+        containerRegistry.RegisterSingleton<ISettingsService, SettingsService>();
     }
     
     public static void RegisterUiViews(this IContainerRegistry containerRegistry)

@@ -11,22 +11,22 @@ public class BackupService : IBackupService
     private readonly ILogger<BackupService> _logger;
     private readonly FileHelpers _fileHelpers = new();
     private readonly string _backupFolder;
+    private readonly ISettingsService _settingsService;
 
-    public BackupService(ILogger<BackupService> logger)
+    public BackupService(ILogger<BackupService> logger, ISettingsService settingsService)
     {
         _logger = logger;
+        _settingsService = settingsService;
         _backupFolder = SetupBackupFolder();
     }
     
     public string SetupBackupFolder()
     {
-        var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        var backupFolder = Path.Combine(appData, "WowConfigCopyBackups");
-        if (!Directory.Exists(backupFolder))
-        {
-            Directory.CreateDirectory(backupFolder);
-            _logger.LogInformation($"Created backup folder at {backupFolder}");
-        }
+        var folderPath = _settingsService.GetSettingsFolder();
+        var backupFolder = Path.Combine(folderPath, "Backups");
+        if (Directory.Exists(backupFolder)) return backupFolder;
+        Directory.CreateDirectory(backupFolder);
+        _logger.LogInformation($"Created backup folder at {backupFolder}");
         return backupFolder;
     }
 
