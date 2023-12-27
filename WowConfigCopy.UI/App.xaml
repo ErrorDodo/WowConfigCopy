@@ -17,6 +17,7 @@
                 <ResourceDictionary Source="/Styles/ToggleButton.xaml"/>
                 <ResourceDictionary Source="/Styles/CustomScrollBar.xaml"/>
                 <ResourceDictionary Source="/Styles/Button.xaml"/>
+                <ResourceDictionary Source="/Styles/ComboBox.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <DataTemplate DataType="{x:Type viewModels:RegionsViewModel}">
                 <views:Regions/>

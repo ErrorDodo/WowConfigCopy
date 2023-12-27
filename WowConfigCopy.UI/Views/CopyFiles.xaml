@@ -6,7 +6,13 @@
              xmlns:local="clr-namespace:WowConfigCopy.UI.Views"
              mc:Ignorable="d">
     <Grid>
-        <TextBlock Text="{Binding AccountName}" FontSize="24" Foreground="{StaticResource TextBrush}" 
-                   Margin="5" FontFamily="{StaticResource ZenKakuGothicAntiqueBold}"/>
+        <StackPanel>
+            <TextBlock Text="{Binding AccountName}" FontSize="24" Foreground="{StaticResource TextBrush}" 
+                       Margin="5" FontFamily="{StaticResource ZenKakuGothicAntiqueBold}"/>
+            <ComboBox ItemsSource="{Binding Accounts}"
+                      DisplayMemberPath="AccountName"
+                      SelectedItem="{Binding SelectedAccount}"
+                      Style="{StaticResource ModernComboBoxStyle}"/>
+        </StackPanel>
     </Grid>
 </UserControl>
