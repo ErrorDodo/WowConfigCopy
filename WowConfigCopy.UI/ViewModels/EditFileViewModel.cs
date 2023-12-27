@@ -13,7 +13,6 @@ public class EditFileViewModel : BindableBase, IInitializeWithParameters
 {
     private readonly ILogger<EditFileViewModel> _logger;
     private readonly IFileService _fileService;
-    private readonly INotificationService _notificationService;
     
     private string _fileName = string.Empty;
     private string _fileContents;
@@ -63,11 +62,10 @@ public class EditFileViewModel : BindableBase, IInitializeWithParameters
     
     public DelegateCommand SaveFileCommand { get; set; }
 
-    public EditFileViewModel(ILogger<EditFileViewModel> logger, IFileService fileService, INotificationService notificationService)
+    public EditFileViewModel(ILogger<EditFileViewModel> logger, IFileService fileService)
     {
         _logger = logger;
         _fileService = fileService;
-        _notificationService = notificationService;
         SaveFileCommand = new DelegateCommand(SaveFile);
     }
     
@@ -105,7 +103,6 @@ public class EditFileViewModel : BindableBase, IInitializeWithParameters
             StatusMessage = "File has not changed, no need to save.";
             StatusVisibility = Visibility.Visible;
             StatusColour = "#FF0000";
-            _notificationService.ShowNotification("File has not changed, no need to save.");
             return;
         }
         await _fileService.SaveFileContents(_fileLocation, FileContents);
@@ -114,7 +111,6 @@ public class EditFileViewModel : BindableBase, IInitializeWithParameters
         StatusMessage = "File saved successfully!";
         StatusVisibility = Visibility.Visible;
         StatusColour = "#00FF00";
-        _notificationService.ShowNotification("File saved successfully!");
         
         await Task.Delay(2000);
         StatusVisibility = Visibility.Collapsed;

@@ -4,11 +4,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:WowConfigCopy.UI.Views"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:behaviours="clr-namespace:WowConfigCopy.UI.Behaviours"
         mc:Ignorable="d"
         Title="Notifications" SizeToContent="WidthAndHeight" 
         Left="{Binding Left}" Top="{Binding Top}"
         WindowStyle="None" Background="{StaticResource BackgroundBrush}" 
         ResizeMode="NoResize" AllowsTransparency="True" Topmost="True">
+    <b:Interaction.Behaviors>
+        <behaviours:ShowWindowBehaviour IsVisible="{Binding ShowNotification}" />
+    </b:Interaction.Behaviors>
     <Grid>
         <StackPanel Orientation="Horizontal" Margin="10">
             <Image Source="your_icon_path.png" Width="20" Height="20"/>

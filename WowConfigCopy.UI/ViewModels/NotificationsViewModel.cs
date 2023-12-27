@@ -29,6 +29,13 @@ public class NotificationsViewModel : BindableBase
         get => _message;
         set => SetProperty(ref _message, value);
     }
+    
+    private bool _showNotification;
+    public bool ShowNotification
+    {
+        get => _showNotification;
+        set => SetProperty(ref _showNotification, value);
+    }
 
     public NotificationsViewModel(ILogger<NotificationsViewModel> logger, IEventAggregator eventAggregator)
     {
@@ -40,6 +47,7 @@ public class NotificationsViewModel : BindableBase
     {
         Message = message;
         PositionNotification();
+        ShowNotification = true;
     }
     
     private void PositionNotification()
