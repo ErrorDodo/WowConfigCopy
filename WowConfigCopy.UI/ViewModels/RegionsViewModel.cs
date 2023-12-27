@@ -15,7 +15,7 @@ namespace WowConfigCopy.UI.ViewModels
     {
         private readonly IAccountConfigService _accountConfigService;
         private readonly ILogger<RegionsViewModel> _logger;
-        private readonly ShellViewModel _shellViewModel;
+        private readonly INavigationService _navigationService;
         
         private ObservableCollection<RegionDetails> _distinctRealms = new();
         public ObservableCollection<RegionDetails> DistinctRealms
@@ -34,11 +34,11 @@ namespace WowConfigCopy.UI.ViewModels
         
         public DelegateCommand<RegionDetails> NavigateToRegionDetailsCommand { get; private set; }
         
-        public RegionsViewModel(ILogger<RegionsViewModel> logger, IAccountConfigService accountConfigService, ShellViewModel shellViewModel)
+        public RegionsViewModel(ILogger<RegionsViewModel> logger, IAccountConfigService accountConfigService, INavigationService navigationService)
         {
             _logger = logger;
             _accountConfigService = accountConfigService;
-            _shellViewModel = shellViewModel;
+            _navigationService = navigationService;
             InitializeAsync().ConfigureAwait(true);
             
             
@@ -47,7 +47,8 @@ namespace WowConfigCopy.UI.ViewModels
 
         private void NavigateToRegionDetails(RegionDetails regionDetails)
         {
-            _shellViewModel.NavigateToRealmDetails(regionDetails);
+            _logger.LogInformation($"Navigating to region details for region: {regionDetails.RealmName}");
+            _navigationService.NavigateToRealmDetails(regionDetails);
         }
 
         private async Task InitializeAsync()

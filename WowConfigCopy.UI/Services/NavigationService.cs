@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Prism.Mvvm;
 using Prism.Navigation;
+using WowConfigCopy.Common.Models;
+using WowConfigCopy.UI.Dto;
 using WowConfigCopy.UI.Interfaces;
 
 namespace WowConfigCopy.UI.Services
@@ -98,5 +100,45 @@ namespace WowConfigCopy.UI.Services
 
         [System.Text.RegularExpressions.GeneratedRegex("([A-Z])")]
         private static partial System.Text.RegularExpressions.Regex ReadableRegex();
+    
+        public void NavigateToRealmDetails(RegionDetails regionDetails)
+        {
+            var parameters = new NavigationParameters
+            {
+                { "region", regionDetails.RealmName }, 
+                { "accounts", regionDetails.Accounts }
+            };
+            NavigateTo("RegionDetails", parameters);
+        }
+        
+        public void NavigateToAccountDetails(RealmAccountsModel model)
+        {
+            var parameters = new NavigationParameters
+            {
+                { "accountName", model.AccountName },
+                { "configLocation", model.ConfigPath }
+            };
+            NavigateTo("AccountDetails", parameters);
+        }
+        
+        public void NavigateToEditFile(ConfigFileModel fileDetails)
+        {
+            var parameters = new NavigationParameters
+            {
+                { "fileLocation", fileDetails.Path },
+                { "fileName", fileDetails.Name }
+            };
+            NavigateTo("EditFile", parameters);
+        }
+        
+        public void NavigateToCopyFiles(string accountName, string configLocation)
+        {
+            var parameters = new NavigationParameters
+            {
+                { "accountName", accountName },
+                { "configLocation", configLocation }
+            };
+            NavigateTo("CopyFiles", parameters);
+        }
     }
 }

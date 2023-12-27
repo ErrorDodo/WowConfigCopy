@@ -14,7 +14,7 @@ namespace WowConfigCopy.UI.ViewModels
     {
         private readonly ILogger<RegionDetailsViewModel> _logger;
         private string _regionName = string.Empty;
-        private readonly ShellViewModel _shellViewModel;
+        private readonly INavigationService _navigationService;
         
         private ObservableCollection<RealmAccountsModel> _realmAccounts;
 
@@ -32,17 +32,17 @@ namespace WowConfigCopy.UI.ViewModels
         
         public DelegateCommand<RealmAccountsModel> ViewAccountDetailsCommand { get; }
 
-        public RegionDetailsViewModel(ILogger<RegionDetailsViewModel> logger, ShellViewModel shellViewModel)
+        public RegionDetailsViewModel(ILogger<RegionDetailsViewModel> logger, INavigationService navigationService)
         {
             _logger = logger;
-            _shellViewModel = shellViewModel;
+            _navigationService = navigationService;
             ViewAccountDetailsCommand = new DelegateCommand<RealmAccountsModel>(ViewAccountDetails);
         }
         
         private void ViewAccountDetails(RealmAccountsModel model)
         {
             _logger.LogInformation($"Moving to account details of account: {model.AccountName}");
-            _shellViewModel.NavigateToAccountDetails(model);
+            _navigationService.NavigateToAccountDetails(model);
         }
 
         public void InitializeWithParameters(NavigationParameters parameters)

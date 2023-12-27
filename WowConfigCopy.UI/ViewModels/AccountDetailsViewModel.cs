@@ -15,7 +15,7 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
     private readonly ILogger<AccountDetailsViewModel> _logger;
     private readonly IAccountConfigService _accountConfigService;
     private readonly IFileService _fileService;
-    private readonly ShellViewModel _shellViewModel;
+    private readonly INavigationService _navigationService;
     private readonly IBackupService _backupService;
     
     private string _configLocation = string.Empty;
@@ -46,18 +46,20 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
     public DelegateCommand<ConfigFileModel> EditFileCommand { get; set; }
     public DelegateCommand<ConfigFileModel> ViewFileCommand { get; set; }
     public DelegateCommand BackupCommand { get; set; }
+    public DelegateCommand CopyFileViewCommand { get; set; }
 
-    public AccountDetailsViewModel(ILogger<AccountDetailsViewModel> logger, IAccountConfigService accountConfigService, IFileService fileService, ShellViewModel shellViewModel, IBackupService backupService)
+    public AccountDetailsViewModel(ILogger<AccountDetailsViewModel> logger, IAccountConfigService accountConfigService, IFileService fileService, IBackupService backupService, INavigationService navigationService)
     {
         _logger = logger;
         _accountConfigService = accountConfigService;
         _fileService = fileService;
-        _shellViewModel = shellViewModel;
         _backupService = backupService;
+        _navigationService = navigationService;
 
         EditFileCommand = new DelegateCommand<ConfigFileModel>(EditFile);
         ViewFileCommand = new DelegateCommand<ConfigFileModel>(ViewFile);
         BackupCommand = new DelegateCommand(ExecuteBackUp);
+        CopyFileViewCommand = new DelegateCommand(CopyFileView);
     }
 
     private async void ExecuteBackUp()
@@ -74,11 +76,19 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
         await Task.Run(() => _backupService.BackupFile(account, _configLocation));
     }
 
+    private void CopyFileView()
+    {
+        var accountName = AccountName.Replace(" ", string.Empty);
+        var account = accountName.Split('-')[0];
+        
+        _logger.LogInformation($"Navigating to copy files view for account: {account}");
+        _navigationService.NavigateToCopyFiles(account, _configLocation);
+    }
     
     private void EditFile(ConfigFileModel model)
     {
         _logger.LogInformation($"Edit file command called for file: {model.Name}");
-        _shellViewModel.NavigateToEditFile(model);
+        _navigationService.NavigateToEditFile(model);
     }
     
     private void ViewFile(ConfigFileModel model)

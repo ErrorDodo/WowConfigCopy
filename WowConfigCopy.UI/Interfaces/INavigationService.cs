@@ -1,6 +1,8 @@
 using System;
 using Prism.Mvvm;
 using Prism.Navigation;
+using WowConfigCopy.Common.Models;
+using WowConfigCopy.UI.Dto;
 
 namespace WowConfigCopy.UI.Interfaces;
 
@@ -14,4 +16,9 @@ public interface INavigationService
     BindableBase GetCurrentViewModel();
     string GetCurrentViewName();
     event Action NavigationStateChanged;
+
+    void NavigateToRealmDetails(RegionDetails regionDetails);
+    void NavigateToAccountDetails(RealmAccountsModel model);
+    void NavigateToEditFile(ConfigFileModel fileDetails);
+    void NavigateToCopyFiles(string accountName, string configLocation);
 }

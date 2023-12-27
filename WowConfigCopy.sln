@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WowConfigCopy.Common", "Wow
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WowConfigCopy.Api", "WowConfigCopy.Api\WowConfigCopy.Api.csproj", "{7AB6CDA9-7AEE-4610-B2E2-FEDC598E6AC0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WowConfigCopy.Updater", "WowConfigCopy.Updater\WowConfigCopy.Updater.csproj", "{1029C75F-D670-4BE5-9B36-EA2DD61D50F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{7AB6CDA9-7AEE-4610-B2E2-FEDC598E6AC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AB6CDA9-7AEE-4610-B2E2-FEDC598E6AC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AB6CDA9-7AEE-4610-B2E2-FEDC598E6AC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1029C75F-D670-4BE5-9B36-EA2DD61D50F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1029C75F-D670-4BE5-9B36-EA2DD61D50F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1029C75F-D670-4BE5-9B36-EA2DD61D50F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1029C75F-D670-4BE5-9B36-EA2DD61D50F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
