@@ -17,10 +17,10 @@ public class ConfigCopy : IConfigCopy
         _logger = logger;
     }
 
-    public void CopyConfigFiles(string sourceConfigLocation, string destinationConfigLocation, bool firstRun = true, bool copySavedVariables = false)
+    public void CopyConfigFiles(string sourceConfigLocation, string destinationConfigLocation, CancellationToken cancellationToken, bool firstRun = true, bool copySavedVariables = false)
     {
         var sourceFiles = GetSourceFiles(sourceConfigLocation, firstRun, copySavedVariables);
-        CopyFiles(sourceFiles, sourceConfigLocation, destinationConfigLocation);
+        CopyFiles(sourceFiles, sourceConfigLocation, destinationConfigLocation, cancellationToken);
     }
     
     private IEnumerable<string> GetSourceFiles(string sourceConfigLocation, bool firstRun, bool copySavedVariables)
@@ -54,12 +54,17 @@ public class ConfigCopy : IConfigCopy
     }
     
     //TODO: Copy keybinds from the root directory (One directory outside of the Realm, make this optional)
-    private void CopyFiles(IEnumerable<string> sourceFiles, string sourceConfigLocation, string destinationConfigLocation)
+    private void CopyFiles(IEnumerable<string> sourceFiles, string sourceConfigLocation, string destinationConfigLocation, CancellationToken cancellationToken)
     {
         var fileIndex = 0;
         var enumerable = sourceFiles as string[] ?? sourceFiles.ToArray();
         foreach (var file in enumerable)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                _logger.LogInformation("File copy operation cancelled");
+                break;
+            }
             var fileName = Path.GetFileName(file);
             var sourceDirectory = Path.GetDirectoryName(file);
         

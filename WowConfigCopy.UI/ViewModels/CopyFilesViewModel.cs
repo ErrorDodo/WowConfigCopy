@@ -1,5 +1,7 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Extensions.Logging;
@@ -13,13 +15,14 @@ using WowConfigCopy.UI.Interfaces;
 
 namespace WowConfigCopy.UI.ViewModels;
 
-public class CopyFilesViewModel : BindableBase, IInitializeWithParameters
+public class CopyFilesViewModel : BindableBase, IInitializeWithParameters, IDestructible
 {
     private readonly ILogger<CopyFilesViewModel> _logger;
     private readonly IConfigFiles _configFiles;
     private readonly IConfigCopy _configCopy;
     private readonly IProcessViewer _processViewer;
 
+    private CancellationTokenSource _cts = new CancellationTokenSource();
     private string _accountName;
     private string _sourceConfigLocation;
     private Visibility _copyButtonVisibility = Visibility.Collapsed;
@@ -134,22 +137,41 @@ public class CopyFilesViewModel : BindableBase, IInitializeWithParameters
 
     private async Task StartCopy()
     {
+        _cts?.Cancel();
+        _cts = new CancellationTokenSource();
         IsOperationInProgress = true;
         ProgressBarVisibility = Visibility.Visible;
         CopyButtonVisibility = Visibility.Collapsed;
 
         await ProcessHelper.EnsureWoWIsClosed(_processViewer);
-        _configCopy.CopyConfigFiles(SelectedAccount.ConfigPath, _sourceConfigLocation, true, true);
 
-        await ProcessHelper.PromptToStartWoW(_processViewer);
-    
-        MessageBox.Show("Please close World of Warcraft to proceed with the next step.", "Notification", MessageBoxButton.OK);
-    
-        await ProcessHelper.EnsureWoWIsClosed(_processViewer);
-        _configCopy.CopyConfigFiles(SelectedAccount.ConfigPath, _sourceConfigLocation, false);
+        try
+        {
+            await Task.Run(() => 
+                    _configCopy.CopyConfigFiles(SelectedAccount.ConfigPath, _sourceConfigLocation, _cts.Token, true, true), 
+                _cts.Token);
 
-        IsOperationInProgress = false;
-        ProgressBarVisibility = Visibility.Collapsed;
+            await ProcessHelper.PromptToStartWoW(_processViewer);
+    
+            MessageBox.Show("Please close World of Warcraft to proceed with the next step.", "Notification", MessageBoxButton.OK);
+    
+            await ProcessHelper.EnsureWoWIsClosed(_processViewer);
+            
+            await Task.Run(() => 
+                    _configCopy.CopyConfigFiles(SelectedAccount.ConfigPath, _sourceConfigLocation, _cts.Token, false, false), 
+                _cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("Copy operation was cancelled.");
+            // Handle the cancellation (e.g., cleanup, user notification)
+        }
+        finally
+        {
+            IsOperationInProgress = false;
+            ProgressBarVisibility = Visibility.Collapsed;
+            CopyButtonVisibility = Visibility.Visible;
+        }
     }
 
     
@@ -168,5 +190,16 @@ public class CopyFilesViewModel : BindableBase, IInitializeWithParameters
             _logger.LogInformation($"Source path: {configLocation}");
             _sourceConfigLocation = configLocation;
         }
+    }
+    
+    private void CancelCopyOperation()
+    {
+        _cts?.Cancel();
+    }
+
+
+    public void Destroy()
+    {
+        CancelCopyOperation();
     }
 }
