@@ -30,32 +30,53 @@ public class BackupService : IBackupService
         return backupFolder;
     }
 
-    public void ExtractBackup(string accountName)
+    public void ExtractBackup(FileInfo? backupFile)
     {
-        // TODO: Update this function to handle more than one backup file, this will most likely entail a new UI for selecting which backup to restore
-        var backupFile = Path.Combine(_backupFolder, $"{accountName} - Backup.zip");
-        if (!File.Exists(backupFile))
+        // This method should not be used until I figure out how to make it look nice and work properly
+        // I'm not sure if I want to overwrite the files here or inside a different logic file/viewmodel
+        if (backupFile is not {Exists: true})
         {
-            _logger.LogError($"Backup file {backupFile} does not exist");
+            _logger.LogError($"Backup file does not exist");
             return;
         }
-        
-        ZipFile.ExtractToDirectory(backupFile, _backupFolder);
-        _logger.LogInformation($"Extracted backup file {backupFile} to {_backupFolder}");
+
+        try
+        {
+            ZipFile.ExtractToDirectory(backupFile.FullName, _backupFolder);
+            _logger.LogInformation($"Extracted backup file {backupFile.Name} to {_backupFolder}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error occurred while extracting backup file {backupFile.Name}");
+        }
     }
+
+    
+    public IEnumerable<FileInfo> GetBackupFiles(string accountName)
+    {
+        var accountBackupFolder = Path.Combine(_backupFolder, accountName);
+        if (!Directory.Exists(accountBackupFolder))
+        {
+            _logger.LogInformation($"No backup folder found for account {accountName}");
+            return Enumerable.Empty<FileInfo>();
+        }
+
+        var directoryInfo = new DirectoryInfo(accountBackupFolder);
+        return directoryInfo.GetFiles("*.zip").OrderByDescending(f => f.CreationTime);
+    }
+
 
     public void BackupFile(string accountName, string configPath)
     {
-        var lastBackupFile = FindLatestBackup(accountName);
-        if (lastBackupFile != null && (DateTime.Now - lastBackupFile.CreationTime).TotalMinutes < 5)
+        var accountBackupFolder = Path.Combine(_backupFolder, accountName);
+        if (!Directory.Exists(accountBackupFolder))
         {
-            _logger.LogInformation($"A recent backup for {accountName} already exists. Skipping new backup.");
-            return;
+            Directory.CreateDirectory(accountBackupFolder);
+            _logger.LogInformation($"Created backup folder for account {accountName}");
         }
 
-        var timestamp = DateTime.Now.ToString("yyyyMMdd-HHmmss");
-        var backupFileName = $"{accountName} {timestamp}.zip";
-        var backupFile = Path.Combine(_backupFolder, backupFileName);
+        var backupFileName = $"{Guid.NewGuid()}.zip";
+        var backupFile = Path.Combine(accountBackupFolder, backupFileName);
 
         var filesToBackup = GetFilesToBackup(configPath);
         var configFileModels = filesToBackup as ConfigFileModel[] ?? filesToBackup.ToArray();
@@ -66,19 +87,7 @@ public class BackupService : IBackupService
 
         DeleteCopiedFiles(configFileModels);
     }
-    
-    public bool HasRecentBackup(string accountName)
-    {
-        var lastBackupFile = FindLatestBackup(accountName);
-        return lastBackupFile != null && (DateTime.Now - lastBackupFile.CreationTime).TotalMinutes < 5;
-    }
 
-    private FileInfo? FindLatestBackup(string accountName)
-    {
-        var directoryInfo = new DirectoryInfo(_backupFolder);
-        return directoryInfo.GetFiles($"{accountName} *.zip").MaxBy(f => f.CreationTime);
-    }
-    
     private void CreateZipFile(string backupFile, IEnumerable<ConfigFileModel> configFileModels)
     {
         using var zipFileStream = new FileStream(backupFile, FileMode.Create);
@@ -90,15 +99,31 @@ public class BackupService : IBackupService
             _logger.LogInformation($"Added {file.Name} to zip file");
         }
     }
-
-
-    private void DeleteExistingBackupFile(string backupFile)
+    
+    public bool HasRecentBackup(string accountName)
     {
-        if (File.Exists(backupFile))
+        var latestBackup = FindLatestBackup(accountName);
+        if (latestBackup == null)
         {
-            File.Delete(backupFile);
-            _logger.LogInformation($"Deleted existing backup file at {backupFile}");
+            return false;
         }
+
+        var backupAge = DateTime.Now - latestBackup.CreationTime;
+        return backupAge < TimeSpan.FromDays(1);
+    }
+
+    private FileInfo? FindLatestBackup(string accountName)
+    {
+        var accountBackupFolder = Path.Combine(_backupFolder, accountName);
+
+        if (!Directory.Exists(accountBackupFolder))
+        {
+            _logger.LogInformation($"No backup folder found for account {accountName}");
+            return null;
+        }
+
+        var directoryInfo = new DirectoryInfo(accountBackupFolder);
+        return directoryInfo.GetFiles("*.zip").MaxBy(f => f.CreationTime);
     }
 
     private IEnumerable<ConfigFileModel> GetFilesToBackup(string configPath)
