@@ -1,10 +1,8 @@
 using Prism.Commands;
 using Prism.Mvvm;
 using Microsoft.Extensions.Logging;
-using Prism.Navigation;
-using WowConfigCopy.Common.Interfaces;
-using WowConfigCopy.Common.Models;
-using WowConfigCopy.UI.Dto;
+using Prism.Events;
+using Prism.Ioc;
 using WowConfigCopy.UI.Interfaces;
 
 namespace WowConfigCopy.UI.ViewModels
@@ -14,6 +12,7 @@ namespace WowConfigCopy.UI.ViewModels
         private readonly ILogger<ShellViewModel> _logger;
         private readonly INavigationService _navigationService;
         private readonly IWindowService _windowService;
+        private readonly NotificationsViewModel _notificationsViewModel;
 
         private string _applicationName = "WoW Config Helper";
         public string CurrentViewName => _navigationService.GetCurrentViewName();
@@ -33,11 +32,13 @@ namespace WowConfigCopy.UI.ViewModels
         public DelegateCommand MaximizeCommand { get; private set; }
         public DelegateCommand<string> NavigateCommand { get; private set; }
 
-        public ShellViewModel(ILogger<ShellViewModel> logger, INavigationService navigationService, IWindowService windowService)
+        public ShellViewModel(ILogger<ShellViewModel> logger, INavigationService navigationService, IWindowService windowService, IEventAggregator eventAggregator, IContainerProvider containerProvider)
         {
             _logger = logger;
             _navigationService = navigationService;
             _windowService = windowService;
+            
+            _notificationsViewModel = containerProvider.Resolve<NotificationsViewModel>();
 
             _navigationService.NavigationStateChanged += OnNavigationStateChanged;
 

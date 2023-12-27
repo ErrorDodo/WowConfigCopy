@@ -1,3 +1,4 @@
+using Prism.Events;
 using Prism.Ioc;
 using WowConfigCopy.Api.Core;
 using WowConfigCopy.Api.Interfaces;
@@ -23,6 +24,7 @@ public static class ContainerExtensions
         containerRegistry.RegisterSingleton<INotificationService, NotificationService>();
         containerRegistry.RegisterSingleton<IBackupService, BackupService>();
         containerRegistry.RegisterSingleton<ISettingsService, SettingsService>();
+        containerRegistry.RegisterSingleton<IEventAggregator, EventAggregator>();
     }
     
     public static void RegisterUiViews(this IContainerRegistry containerRegistry)
@@ -30,6 +32,10 @@ public static class ContainerExtensions
         containerRegistry.Register<RegionsViewModel>();
         containerRegistry.Register<SettingsViewModel>();
         containerRegistry.Register<RegionDetailsViewModel>();
+        containerRegistry.Register<NotificationsViewModel>();
+        containerRegistry.Register<EditFileViewModel>();
+        containerRegistry.Register<AccountDetailsViewModel>();
+        containerRegistry.Register<CopyFilesViewModel>();
     }
     
     public static void RegisterApiServices(this IContainerRegistry containerRegistry)

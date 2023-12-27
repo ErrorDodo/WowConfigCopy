@@ -1,20 +1,20 @@
-using System.Threading.Tasks;
+using Prism.Events;
+using WowConfigCopy.UI.Events;
 using WowConfigCopy.UI.Interfaces;
-using WowConfigCopy.UI.ViewModels;
-using WowConfigCopy.UI.Views;
 
 namespace WowConfigCopy.UI.Services;
 
 public class NotificationService : INotificationService
 {
+    private readonly IEventAggregator _eventAggregator;
+
+    public NotificationService(IEventAggregator eventAggregator)
+    {
+        _eventAggregator = eventAggregator;
+    }
+
     public void ShowNotification(string message)
     {
-        var notificationWindow = new Notifications()
-        {
-            DataContext = new NotificationViewModel(message)
-        };
-        notificationWindow.Show();
-        
-        Task.Delay(3000).ContinueWith(_ => notificationWindow.Dispatcher.Invoke(() => notificationWindow.Close()));
+        _eventAggregator.GetEvent<ShowNotificationEvent>().Publish(message);
     }
 }

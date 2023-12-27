@@ -5,9 +5,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:WowConfigCopy.UI.Views"
         mc:Ignorable="d"
-        Title="Notifications" Height="450" Width="800"
-        WindowStyle="None" Background="{StaticResource BackgroundBrush}" ResizeMode="NoResize" AllowsTransparency="True" Topmost="True">
+        Title="Notifications" SizeToContent="WidthAndHeight" 
+        Left="{Binding Left}" Top="{Binding Top}"
+        WindowStyle="None" Background="{StaticResource BackgroundBrush}" 
+        ResizeMode="NoResize" AllowsTransparency="True" Topmost="True">
     <Grid>
-        <TextBlock Text="{Binding Message}" Style="{StaticResource HeaderTextBlockStyle}"/>
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <Image Source="your_icon_path.png" Width="20" Height="20"/>
+            <TextBlock Text="{Binding Message}" Style="{StaticResource HeaderTextBlockStyle}" Margin="5,0,0,0"/>
+        </StackPanel>
     </Grid>
 </Window>

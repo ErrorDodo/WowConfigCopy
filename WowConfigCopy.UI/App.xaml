@@ -33,7 +33,7 @@
             <DataTemplate DataType="{x:Type viewModels:EditFileViewModel}">
                 <views:EditFile/>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModels:NotificationViewModel}">
+            <DataTemplate DataType="{x:Type viewModels:NotificationsViewModel}">
                 <views:Notifications/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewModels:CopyFilesViewModel}">
