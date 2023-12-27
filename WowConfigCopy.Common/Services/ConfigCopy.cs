@@ -52,7 +52,8 @@ public class ConfigCopy : IConfigCopy
         var savedVariablesDirectory = Path.Combine(sourceConfigLocation, "SavedVariables");
         return files.Concat(_fileHelpers.GetFilesSafe(savedVariablesDirectory));
     }
-
+    
+    //TODO: Copy keybinds from the root directory (One directory outside of the Realm, make this optional)
     private void CopyFiles(IEnumerable<string> sourceFiles, string sourceConfigLocation, string destinationConfigLocation)
     {
         var fileIndex = 0;
