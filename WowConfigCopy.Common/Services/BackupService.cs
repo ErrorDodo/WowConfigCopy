@@ -75,16 +75,26 @@ public class BackupService : IBackupService
             _logger.LogInformation($"Created backup folder for account {accountName}");
         }
 
-        var backupFileName = $"{Guid.NewGuid()}.zip";
+        // If a backup was created less than 5 minutes ago, skip creating a new backup
+        // This is to prevent creating a backup every time the user clicks the backup button
+        // To save space on the user machine
+        // TODO: Should this be a setting that the user can change?
+        var lastBackupFile = FindLatestBackup(accountBackupFolder);
+        if (lastBackupFile != null && (DateTime.Now - lastBackupFile.CreationTime).TotalMinutes < 5)
+        {
+            _logger.LogInformation($"A recent backup for {accountName} was created less than 5 minutes ago. Skipping new backup.");
+            return;
+        }
+
+        var timestamp = DateTime.Now.ToString("yyyyMMdd-HHmmss");
+        var backupFileName = $"{timestamp}-{Guid.NewGuid()}.zip";
         var backupFile = Path.Combine(accountBackupFolder, backupFileName);
 
         var filesToBackup = GetFilesToBackup(configPath);
         var configFileModels = filesToBackup as ConfigFileModel[] ?? filesToBackup.ToArray();
         CopyFilesToBackupFolder(configFileModels);
-
         CreateZipFile(backupFile, configFileModels);
         _logger.LogInformation($"Created backup file at {backupFile}");
-
         DeleteCopiedFiles(configFileModels);
     }
 
@@ -125,6 +135,7 @@ public class BackupService : IBackupService
         var directoryInfo = new DirectoryInfo(accountBackupFolder);
         return directoryInfo.GetFiles("*.zip").MaxBy(f => f.CreationTime);
     }
+
 
     private IEnumerable<ConfigFileModel> GetFilesToBackup(string configPath)
     {
