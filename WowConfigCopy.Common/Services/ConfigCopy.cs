@@ -8,7 +8,7 @@ public class ConfigCopy : IConfigCopy
 {
     private readonly ILogger<ConfigCopy> _logger;
     private readonly FileHelpers _fileHelpers = new();
-    
+
     public event EventHandler<int> ProgressChanged;
     public event EventHandler<string> FileCopying;
 
@@ -16,57 +16,75 @@ public class ConfigCopy : IConfigCopy
     {
         _logger = logger;
     }
-    
+
     public void CopyConfigFiles(string sourceConfigLocation, string destinationConfigLocation, bool firstRun = true, bool copySavedVariables = false)
     {
-        _logger.LogInformation($"Copying config files from {sourceConfigLocation} to {destinationConfigLocation}");
+        var sourceFiles = GetSourceFiles(sourceConfigLocation, firstRun, copySavedVariables);
+        CopyFiles(sourceFiles, destinationConfigLocation);
+    }
+
+    private IEnumerable<string> GetSourceFiles(string sourceConfigLocation, bool firstRun, bool copySavedVariables)
+    {
         var sourceFiles = _fileHelpers.GetFilesSafe(sourceConfigLocation);
-        
+
         if (firstRun)
         {
-            _logger.LogInformation("First run detected, only copying config-cache.wtf and AddOns.txt");
-            sourceFiles = sourceFiles.Where(x => x.Contains("config-cache.wtf") || x.Contains("AddOns.txt"));
-        }
-        else
-        {
-            _logger.LogInformation("Not first run, copying all files");
-        }
-        
-        if (copySavedVariables)
-        {
-            _logger.LogInformation("Copying SavedVariables directory");
-            var savedVariablesDirectory = Path.Combine(sourceConfigLocation, "SavedVariables");
-            sourceFiles = sourceFiles.Concat(_fileHelpers.GetFilesSafe(savedVariablesDirectory));
+            sourceFiles = FilterInitialRunFiles(sourceFiles);
         }
 
+        if (copySavedVariables)
+        {
+            sourceFiles = IncludeSavedVariables(sourceConfigLocation, sourceFiles);
+        }
+
+        return sourceFiles;
+    }
+
+    private IEnumerable<string> FilterInitialRunFiles(IEnumerable<string> files)
+    {
+        _logger.LogInformation("First run detected, only copying config-cache.wtf and AddOns.txt");
+        return files.Where(x => x.EndsWith("config-cache.wtf") || x.EndsWith("AddOns.txt"));
+    }
+
+    private IEnumerable<string> IncludeSavedVariables(string sourceConfigLocation, IEnumerable<string> files)
+    {
+        _logger.LogInformation("Copying SavedVariables directory");
+        var savedVariablesDirectory = Path.Combine(sourceConfigLocation, "SavedVariables");
+        return files.Concat(_fileHelpers.GetFilesSafe(savedVariablesDirectory));
+    }
+
+    private void CopyFiles(IEnumerable<string> sourceFiles, string destinationConfigLocation)
+    {
         var fileIndex = 0;
         var enumerable = sourceFiles as string[] ?? sourceFiles.ToArray();
         foreach (var file in enumerable)
         {
             var fileName = Path.GetFileName(file);
+            FileCopying?.Invoke(this, fileName);
+            var newDestinationFile = GenerateUniqueDestinationPath(destinationConfigLocation, fileName, ref fileIndex);
             
-            // If it's the first run, we want to only copy config-cache.wtf and AddOns.txt
-            // We also copy the directory SavedVariables but have this as a boolean as well 
-            
-            FileCopying.Invoke(this, fileName);
-            var destinationFile = Path.Combine(destinationConfigLocation, fileName);
-            
-            var newDestinationFile = destinationFile;
-            while (File.Exists(newDestinationFile))
-            {
-                newDestinationFile = Path.Combine(destinationConfigLocation, $"{Path.GetFileNameWithoutExtension(fileName)}_{fileIndex}{Path.GetExtension(fileName)}");
-                fileIndex++;
-            }
+            // Actual file copy logic
+            _logger.LogInformation($"Copying {fileName} to {newDestinationFile}");
+            // Uncomment in production
+            // File.Copy(file, newDestinationFile, true);
 
-            _logger.LogInformation($"Creating new file: {newDestinationFile}");
-            // File.Create(newDestinationFile).Dispose(); // Uncomment to actually create the file
-            
-            ProgressChanged?.Invoke(this, (fileIndex + 1) * 100 / enumerable.Length);
-
-            // Use File.Create to create a new file for debugging purposes
-            // Comment this out and uncomment the File.Copy line in production
-            // File.Create(newDestinationFile).Dispose(); // Uncomment this line when debugging
-            // File.Copy(file, newDestinationFile, true); // Use this line in production
+            ProgressChanged?.Invoke(this, CalculateProgressPercentage(fileIndex, enumerable.Length));
         }
+    }
+
+    private string GenerateUniqueDestinationPath(string destinationConfigLocation, string fileName, ref int fileIndex)
+    {
+        var newDestinationFile = Path.Combine(destinationConfigLocation, fileName);
+        while (File.Exists(newDestinationFile))
+        {
+            newDestinationFile = Path.Combine(destinationConfigLocation, $"{Path.GetFileNameWithoutExtension(fileName)}_{fileIndex}{Path.GetExtension(fileName)}");
+            fileIndex++;
+        }
+        return newDestinationFile;
+    }
+
+    private int CalculateProgressPercentage(int fileIndex, int totalFiles)
+    {
+        return (fileIndex + 1) * 100 / totalFiles;
     }
 }

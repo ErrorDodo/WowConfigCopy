@@ -1,4 +1,3 @@
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
+using WowConfigCopy.Common.Helpers;
 using WowConfigCopy.Common.Interfaces;
 using WowConfigCopy.Common.Models;
 using WowConfigCopy.UI.Interfaces;
@@ -137,15 +137,21 @@ public class CopyFilesViewModel : BindableBase, IInitializeWithParameters
         IsOperationInProgress = true;
         ProgressBarVisibility = Visibility.Visible;
         CopyButtonVisibility = Visibility.Collapsed;
-        
-        // This is the first run
+
+        await ProcessHelper.EnsureWoWIsClosed(_processViewer);
         _configCopy.CopyConfigFiles(SelectedAccount.ConfigPath, _sourceConfigLocation);
-        
-        // This is the second run
+
+        await ProcessHelper.PromptToStartWoW(_processViewer);
+    
+        MessageBox.Show("Please close World of Warcraft to proceed with the next step.", "Notification", MessageBoxButton.OK);
+    
+        await ProcessHelper.EnsureWoWIsClosed(_processViewer);
         _configCopy.CopyConfigFiles(_sourceConfigLocation, SelectedAccount.ConfigPath, false);
 
         IsOperationInProgress = false;
+        ProgressBarVisibility = Visibility.Collapsed;
     }
+
     
     public void InitializeWithParameters(NavigationParameters parameters)
     {
