@@ -12,8 +12,9 @@ public class RegistryHelper : IRegistryHelper
     {
         _logger = logger;
     }
-
-    // TODO: This might be only getting a single install of WoW, need to check if it gets all of them
+    
+    // TODO: Do a workaround, blizzard is annoying for this one. Whichever version of classic you loaded up recently the registry will point to that one. (SoD, Wotlk)
+    // Maybe Tell the user this in the UI so they know about this issue
     public string? GetWowInstallPath()
     {
         _logger.LogInformation("Getting WoW Install Path From Registry...");
