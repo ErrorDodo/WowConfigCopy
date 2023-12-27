@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:WowConfigCopy.UI.Views"
              mc:Ignorable="d">
     <Grid>
-        
+        <TextBlock Text="{Binding AccountName}" FontSize="24" Foreground="{StaticResource TextBrush}" 
+                   Margin="5" FontFamily="{StaticResource ZenKakuGothicAntiqueBold}"/>
     </Grid>
 </UserControl>
