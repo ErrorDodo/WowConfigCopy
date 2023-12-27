@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using WowConfigCopy.Common.Interfaces;
 using WowConfigCopy.Common.Models;
+using WowConfigCopy.Common.Helpers;
 
 namespace WowConfigCopy.Common.Services
 {
@@ -9,11 +10,14 @@ namespace WowConfigCopy.Common.Services
     {
         private readonly ILogger<ConfigFiles> _logger;
         private readonly IRegistryHelper _registryHelper;
+        private readonly IBackupService _backupService;
+        private readonly FileHelpers _fileHelpers = new();
 
-        public ConfigFiles(ILogger<ConfigFiles> logger, IRegistryHelper registryHelper)
+        public ConfigFiles(ILogger<ConfigFiles> logger, IRegistryHelper registryHelper, IBackupService backupService)
         {
             _logger = logger;
             _registryHelper = registryHelper;
+            _backupService = backupService;
         }
 
         public async Task<ObservableCollection<RealmAccountsModel>> GetRealmsAccounts()
@@ -28,7 +32,7 @@ namespace WowConfigCopy.Common.Services
             }
 
             var accountPaths = Path.Combine(wowInstallPath, "WTF", "Account");
-            var accountFolders = GetDirectoriesSafe(accountPaths);
+            var accountFolders = _fileHelpers.GetDirectoriesSafe(accountPaths);
     
             // Debugging: Log each account folder found
             var enumerable = accountFolders as string[] ?? accountFolders.ToArray();
@@ -38,7 +42,7 @@ namespace WowConfigCopy.Common.Services
             }
 
             var realmAccountTasks = enumerable.SelectMany(accountFolder =>
-                GetDirectoriesSafe(accountFolder)
+                _fileHelpers.GetDirectoriesSafe(accountFolder)
                     .Where(realmFolder => !Path.GetFileName(realmFolder).Equals("SavedVariables", StringComparison.OrdinalIgnoreCase))
                     .Select(ParseAccountsInRealmAsync)).ToList();
 
@@ -61,7 +65,7 @@ namespace WowConfigCopy.Common.Services
         {
             _logger.LogInformation($"Retrieving Config Files for {configPath}");
 
-            var files = GetFilesSafe(configPath);
+            var files = _fileHelpers.GetFilesSafe(configPath);
 
             var allFiles = (from file in files where !file.EndsWith(".old", StringComparison.OrdinalIgnoreCase) select new ConfigFileModel {Name = Path.GetFileName(file), Path = file, IsGlobal = false}).ToList();
 
@@ -69,7 +73,7 @@ namespace WowConfigCopy.Common.Services
             var accountDirectory = Directory.GetParent(Directory.GetParent(configPath).FullName).FullName;
             _logger.LogInformation($"Retrieving Account Config Files for {accountDirectory}");
 
-            var accountFiles = GetFilesSafe(accountDirectory);
+            var accountFiles = _fileHelpers.GetFilesSafe(accountDirectory);
             allFiles.AddRange(from file in accountFiles where !file.EndsWith(".old", StringComparison.OrdinalIgnoreCase) select new ConfigFileModel {Name = Path.GetFileName(file), Path = file, IsGlobal = true});
 
             return new ObservableCollection<ConfigFileModel>(allFiles);
@@ -81,6 +85,9 @@ namespace WowConfigCopy.Common.Services
         {
             _logger.LogInformation("Reading WoW config files for version: {WowVersion}", wowVersion);
             var wowInstallPath = _registryHelper.GetWowInstallPath();
+            
+            _logger.LogInformation("Setting up backup folder");
+            _backupService.SetupBackupFolder();
 
             if (string.IsNullOrEmpty(wowInstallPath))
             {
@@ -95,11 +102,12 @@ namespace WowConfigCopy.Common.Services
                 return new ObservableCollection<AccountModel>();
             }
 
-            var accountFolders = GetDirectoriesSafe(accountPaths);
+            var accountFolders = _fileHelpers.GetDirectoriesSafe(accountPaths);
             var tasks = accountFolders.Select(ParseAccountFolderAsync);
             var accounts = await Task.WhenAll(tasks);
 
             _logger.LogInformation("Config file parsing completed.");
+            
             return new ObservableCollection<AccountModel>(accounts.Where(_ => true));
         }
 
@@ -117,7 +125,7 @@ namespace WowConfigCopy.Common.Services
 
         private async Task<ObservableCollection<RealmModel>> ParseRealmFoldersAsync(string path)
         {
-            var realmFolders = await Task.Run(() => GetDirectoriesSafe(path));
+            var realmFolders = await Task.Run(() => _fileHelpers.GetDirectoriesSafe(path));
             var realms = realmFolders
                 .Where(realmPath => !Path.GetFileName(realmPath).Equals("SavedVariables", StringComparison.OrdinalIgnoreCase))
                 .Select(async realmPath =>
@@ -144,7 +152,7 @@ namespace WowConfigCopy.Common.Services
         
         private async Task<ObservableCollection<RealmAccountsModel>> ParseAccountsInRealmAsync(string realmPath)
         {
-            var accountFolders = await Task.Run(() => GetDirectoriesSafe(realmPath));
+            var accountFolders = await Task.Run(() => _fileHelpers.GetDirectoriesSafe(realmPath));
             var accounts = accountFolders.Select(accountPath => new RealmAccountsModel
             {
                 AccountName = Path.GetFileName(accountPath),
@@ -152,17 +160,6 @@ namespace WowConfigCopy.Common.Services
             });
 
             return new ObservableCollection<RealmAccountsModel>(accounts);
-        }
-
-        
-        private IEnumerable<string> GetDirectoriesSafe(string path)
-        {
-            return Directory.Exists(path) ? Directory.GetDirectories(path) : Array.Empty<string>();
-        }
-        
-        private IEnumerable<string> GetFilesSafe(string path)
-        {
-            return Directory.Exists(path) ? Directory.GetFiles(path) : Array.Empty<string>();
         }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
+using WowConfigCopy.Common.Interfaces;
 using WowConfigCopy.Common.Models;
 using WowConfigCopy.UI.Interfaces;
 
@@ -15,6 +16,7 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
     private readonly IAccountConfigService _accountConfigService;
     private readonly IFileService _fileService;
     private readonly ShellViewModel _shellViewModel;
+    private readonly IBackupService _backupService;
     
     private string _configLocation = string.Empty;
     private string _accountName = string.Empty;
@@ -43,17 +45,35 @@ public class AccountDetailsViewModel : BindableBase, IInitializeWithParameters
     
     public DelegateCommand<ConfigFileModel> EditFileCommand { get; set; }
     public DelegateCommand<ConfigFileModel> ViewFileCommand { get; set; }
+    public DelegateCommand BackupCommand { get; set; }
 
-    public AccountDetailsViewModel(ILogger<AccountDetailsViewModel> logger, IAccountConfigService accountConfigService, IFileService fileService, ShellViewModel shellViewModel)
+    public AccountDetailsViewModel(ILogger<AccountDetailsViewModel> logger, IAccountConfigService accountConfigService, IFileService fileService, ShellViewModel shellViewModel, IBackupService backupService)
     {
         _logger = logger;
         _accountConfigService = accountConfigService;
         _fileService = fileService;
         _shellViewModel = shellViewModel;
+        _backupService = backupService;
 
         EditFileCommand = new DelegateCommand<ConfigFileModel>(EditFile);
         ViewFileCommand = new DelegateCommand<ConfigFileModel>(ViewFile);
+        BackupCommand = new DelegateCommand(ExecuteBackUp);
     }
+
+    private async void ExecuteBackUp()
+    {
+        await BackupFilesAsync();
+    }
+
+    private async Task BackupFilesAsync()
+    {
+        var accountName = AccountName.Replace(" ", string.Empty);
+        var account = accountName.Split('-')[0];
+    
+        _logger.LogInformation($"Backing up files for account: {account}");
+        await Task.Run(() => _backupService.BackupFile(account, _configLocation));
+    }
+
     
     private void EditFile(ConfigFileModel model)
     {

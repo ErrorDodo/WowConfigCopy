@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-using System.Windows;
 using Prism.Commands;
 using Prism.Mvvm;
 using Microsoft.Extensions.Logging;
 using Prism.Navigation;
+using WowConfigCopy.Common.Interfaces;
 using WowConfigCopy.Common.Models;
 using WowConfigCopy.UI.Dto;
 using WowConfigCopy.UI.Interfaces;
@@ -39,7 +38,7 @@ namespace WowConfigCopy.UI.ViewModels
             _logger = logger;
             _navigationService = navigationService;
             _windowService = windowService;
-            
+
             _navigationService.NavigationStateChanged += OnNavigationStateChanged;
 
             SaveCommand = new DelegateCommand(SaveSettings);

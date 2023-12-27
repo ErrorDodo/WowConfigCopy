@@ -58,12 +58,23 @@
                 CornerRadius="10"
                 Margin="10"
                 Padding="10">
-            <TextBlock Text="Buttons for Options" 
-                       FontSize="24" 
-                       Foreground="{StaticResource TextBrush}" 
-                       Margin="5" 
-                       FontFamily="{StaticResource ZenKakuGothicAntiqueBold}"
-                       TextWrapping="Wrap"/>
+            <StackPanel>
+                <TextBlock Text="Buttons for Options" 
+                           FontSize="24" 
+                           Foreground="{StaticResource TextBrush}" 
+                           Margin="5" 
+                           FontFamily="{StaticResource ZenKakuGothicAntiqueBold}"
+                           TextWrapping="Wrap"/>
+                <Button
+                        Content="Backup Files"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Stretch"
+                        VerticalContentAlignment="Stretch"
+                        HorizontalContentAlignment="Stretch"
+                        Margin="10"
+                        Style="{StaticResource ModernButtonStyle}"
+                        Command="{Binding BackupCommand}"/>
+            </StackPanel>
         </Border>
     </Grid>
 </UserControl>
