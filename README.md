@@ -102,3 +102,5 @@ Distributed under the GNU Public License v3.0. See [LICENSE](./LICENSE) for more
 ## Contact
 
 ## Acknowledgements
+
+If you're after a WowAddon that does the same thing check this out [MySlot](https://www.curseforge.com/wow/addons/myslot)
