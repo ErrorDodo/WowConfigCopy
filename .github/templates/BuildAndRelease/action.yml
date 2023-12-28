@@ -22,8 +22,7 @@ runs:
 
     - name: Publish as Single File
       run: |
-        dotnet publish --configuration Release --no-restore --runtime win-x64 \
-        --output ./publish /p:PublishSingleFile=true /p:PublishReadyToRun=true
+        dotnet publish --configuration Release --no-restore --runtime win-x64 --output ./publish /p:PublishSingleFile=true /p:PublishReadyToRun=true
       shell: pwsh
 
 #    - name: Publish
