@@ -1,5 +1,5 @@
 name: "Build and Release"
-description: "Build and release the .NET 7 WPF application"
+description: "Build and release the .NET 7 WPF application as a single file with trimmed dependencies"
 
 runs:
   using: "composite"
@@ -20,10 +20,16 @@ runs:
       run: dotnet build --configuration Release --no-restore
       shell: pwsh
 
-    - name: Publish
-      run: dotnet publish --configuration Release --no-restore --output ./publish
+    - name: Publish as Single File
+      run: |
+        dotnet publish --configuration Release --no-restore --runtime win-x64 \
+        --output ./publish /p:PublishSingleFile=true /p:PublishReadyToRun=true
       shell: pwsh
 
-    - name: Zip Artifacts
+#    - name: Publish
+#      run: dotnet publish --configuration Release --no-restore --output ./publish
+#      shell: pwsh
+
+    - name: Archive Artifacts
       run: Compress-Archive -Path ./publish/* -DestinationPath ./publish/WowConfigCopy.zip
       shell: pwsh
