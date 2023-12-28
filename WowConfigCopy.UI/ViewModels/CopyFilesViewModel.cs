@@ -116,6 +116,18 @@ public class CopyFilesViewModel : BindableBase, IInitializeWithParameters, IDest
     {
         _configCopy.FileCopying += OnFileCopying;
         _configCopy.ProgressChanged += OnProgressChanged;
+        ProcessHelper.RequestCloseWoW += OnRequestCloseWoW;
+        ProcessHelper.RequestStartWoW += OnRequestStartWoW;
+    }
+    
+    private void OnRequestCloseWoW(object sender, string message)
+    {
+        MessageBox.Show(message, "Notification", MessageBoxButton.OK);
+    }
+
+    private void OnRequestStartWoW(object sender, string message)
+    {
+        MessageBox.Show(message, "Notification", MessageBoxButton.OK);
     }
     
     private void OnFileCopying(object? sender, string fileName)
@@ -152,11 +164,8 @@ public class CopyFilesViewModel : BindableBase, IInitializeWithParameters, IDest
                 _cts.Token);
 
             await ProcessHelper.PromptToStartWoW(_processViewer);
-    
-            MessageBox.Show("Please close World of Warcraft to proceed with the next step.", "Notification", MessageBoxButton.OK);
-    
-            await ProcessHelper.EnsureWoWIsClosed(_processViewer);
             
+
             await Task.Run(() => 
                     _configCopy.CopyConfigFiles(SelectedAccount.ConfigPath, _sourceConfigLocation, _cts.Token, false, false), 
                 _cts.Token);
@@ -173,6 +182,7 @@ public class CopyFilesViewModel : BindableBase, IInitializeWithParameters, IDest
             CopyButtonVisibility = Visibility.Visible;
         }
     }
+
 
     
     public void InitializeWithParameters(NavigationParameters parameters)
