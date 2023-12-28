@@ -6,7 +6,7 @@ on:
       tagName:
         description: 'Tag for the release'
         required: true
-        default: 'release'
+        default: 'WowConfigCopy'
 
 permissions:
   contents: write
