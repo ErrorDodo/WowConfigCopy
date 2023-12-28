@@ -1,4 +1,4 @@
-# Project Name
+# Wow Config Copier
 
 ## Table of Contents
 - [About the Project](#about-the-project)
