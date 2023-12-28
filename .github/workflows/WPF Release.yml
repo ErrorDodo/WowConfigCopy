@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build and Release WowConfigCopy
-        uses: ./.github/actions/build-release
+        uses: ./.github/templates/BuildAndRelease
 
       - name: Create Release
         uses: actions/create-release@v1
