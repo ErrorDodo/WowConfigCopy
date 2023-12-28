@@ -1,0 +1,40 @@
+name: Manual Build, Release, and Upload
+
+on:
+  workflow_dispatch:
+    inputs:
+      tagName:
+        description: 'Tag for the release'
+        required: true
+        default: 'release'
+
+jobs:
+  build-release-upload:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Build and Release WowConfigCopy
+        uses: ./.github/actions/build-release
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.tagName }}
+          release_name: Release ${{ github.event.inputs.tagName }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./publish/WowConfigCopy.zip
+          asset_name: WowConfigCopy.zip
+          asset_content_type: application/zip

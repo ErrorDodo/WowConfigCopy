@@ -1,0 +1,26 @@
+name: Automatic PR Build
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build-check:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '7.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+        shell: pwsh
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+        shell: pwsh
