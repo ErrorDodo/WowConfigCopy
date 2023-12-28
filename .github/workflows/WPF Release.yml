@@ -24,6 +24,7 @@ jobs:
         uses: ./.github/templates/BuildAndRelease
 
       - name: Create Release
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -32,6 +33,7 @@ jobs:
           release_name: Release ${{ github.event.inputs.tagName }}
           draft: false
           prerelease: false
+
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
@@ -42,3 +44,4 @@ jobs:
           asset_path: ./publish/WowConfigCopy.zip
           asset_name: WowConfigCopy.zip
           asset_content_type: application/zip
+
