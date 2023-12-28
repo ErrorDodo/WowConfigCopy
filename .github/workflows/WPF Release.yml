@@ -8,6 +8,10 @@ on:
         required: true
         default: 'release'
 
+permissions:
+  contents: write
+  packages: write
+    
 jobs:
   build-release-upload:
     runs-on: windows-latest
