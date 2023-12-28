@@ -86,13 +86,14 @@ See the [open issues](https://github.com/ErrorDodo/WowConfigCopy/issues) for a l
 
 Any contributions you make are greatly appreciated. You can view what needs to be done in the [issues](https://github.com/ErrorDodo/WowConfigCopy/issues) section.
 To contribute to the project follow these steps:
+
 1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/NewFeature`)
+2. Create your Feature Branch based on the develop branch (`git checkout -b feature/NewFeature`)
 3. Commit your Changes (`git commit -m 'Add some NewFeature'`)
 4. Push to the Branch (`git push origin feature/NewFeature`)
-5. Open a Pull Request
+5. Open a Pull Request to the [develop](https://github.com/ErrorDodo/WowConfigCopy/tree/develop) branch
 6. Wait for the pull request to be reviewed
-
+7. Once the pull request has been merged after review and testing it will be added to the next release
 
 ## License
 
