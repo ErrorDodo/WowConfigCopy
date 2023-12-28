@@ -24,7 +24,6 @@ public class Bootstrapper : PrismBootstrapper
         RegisterLogging.Register(containerRegistry);
         containerRegistry.RegisterUiViews();
         containerRegistry.RegisterUiServices();
-        containerRegistry.RegisterApiServices();
         containerRegistry.RegisterCommonServices();
     }
 }

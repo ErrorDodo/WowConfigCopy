@@ -16,7 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WowConfigCopy.Api\WowConfigCopy.Api.csproj" />
       <ProjectReference Include="..\WowConfigCopy.Common\WowConfigCopy.Common.csproj" />
     </ItemGroup>
 

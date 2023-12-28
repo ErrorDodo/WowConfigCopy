@@ -1,8 +1,5 @@
 using Prism.Events;
 using Prism.Ioc;
-using WowConfigCopy.Api.Core;
-using WowConfigCopy.Api.Interfaces;
-using WowConfigCopy.Api.Services;
 using WowConfigCopy.Common.Interfaces;
 using WowConfigCopy.Common.Services;
 using WowConfigCopy.UI.Core;
@@ -36,12 +33,6 @@ public static class ContainerExtensions
         containerRegistry.Register<EditFileViewModel>();
         containerRegistry.Register<AccountDetailsViewModel>();
         containerRegistry.Register<CopyFilesViewModel>();
-    }
-    
-    public static void RegisterApiServices(this IContainerRegistry containerRegistry)
-    {
-        containerRegistry.RegisterSingleton<BlizzardApiClientFactory>();
-        containerRegistry.RegisterSingleton<IGenericApiService, GenericApiService>();
     }
     
     public static void RegisterCommonServices(this IContainerRegistry containerRegistry)
