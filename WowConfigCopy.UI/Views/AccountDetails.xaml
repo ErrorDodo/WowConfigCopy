@@ -59,12 +59,6 @@
                 Margin="10"
                 Padding="10">
             <StackPanel HorizontalAlignment="Center">
-                <TextBlock Text="Buttons for Options" 
-                           FontSize="24" 
-                           Foreground="{StaticResource TextBrush}" 
-                           Margin="5" 
-                           FontFamily="{StaticResource ZenKakuGothicAntiqueBold}"
-                           TextWrapping="Wrap"/>
                 <Button
                         Content="Backup Files"
                         HorizontalAlignment="Center"
