@@ -164,6 +164,7 @@ public class CopyFilesViewModel : BindableBase, IInitializeWithParameters, IDest
                 _cts.Token);
 
             await ProcessHelper.PromptToStartWoW(_processViewer);
+            await ProcessHelper.EnsureWoWIsClosed(_processViewer);
             
 
             await Task.Run(() => 
